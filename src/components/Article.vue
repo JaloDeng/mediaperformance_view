@@ -1,8 +1,91 @@
 <template>
-  <div>1</div>
+  <div>
+    <el-container>
+      <el-header style="padding: 0px;justify-content:space-between;align-items: center">
+        <div style="display: inline; text-align:center">
+          <el-input placeholder="" clearable style="width: 500px;"  size="mini" @keyup.enter.native="search" prefix-icon="el-icon-search"></el-input>
+          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search"></el-button>
+        </div>
+      </el-header>
+      <el-main style="padding-left: 0px;padding-top: 0px">
+        <div>
+          <el-table :data="articles" v-loading="tableLoading" size="mini" border>
+            <el-table-column align="center" type="selection" width="30"></el-table-column>
+            <el-table-column align="center" prop="appPublishTime" label="发布时间"></el-table-column>
+            <el-table-column align="center" prop="category" label="栏目"></el-table-column>
+            <el-table-column align="center" prop="appTitle" label="标题"></el-table-column>
+            <el-table-column align="center" prop="author" label="作者"></el-table-column>
+            <el-table-column align="center" prop="wordCount" label="字数"></el-table-column>
+          </el-table>
+          <br />
+          <div style="justify-content:space-between;">
+            <el-pagination background :page-sizes="sizes" :page-size="size" @size-change="sizeChange" :current-page="page" @current-change="currentChange"
+              layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
+          </div>
+        </div>
+      </el-main>
+    </el-container>
+  </div>
 </template>
 
 <script>
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      articles: [],
+      article: {
+        id: '',
+        appPublishTime: '',
+        category: '',
+        appTitle: '',
+        author: '',
+        articleType: '',
+        editor: '',
+        wordCount: '',
+        clickCount: '',
+        url: '',
+        level: '',
+        score: '',
+        createUser: '',
+        createTime: '',
+        updateUser: '',
+        updateTime: ''
+      },
+      page: 1,
+      size: 10,
+      sizes: [10, 20, 50],
+      tableLoading: false,
+      total: 1
+    }
+  },
+  methods: {
+    currentChange (currentChange) {
+      this.page = currentChange
+      this.load()
+    },
+    load: function () {
+      let aaa = axios.create({})
+      var _this = this
+      this.tableLoading = true
+      aaa.get('http://localhost:8085/article/app').then(resp => {
+        this.tableLoading = false
+        _this.articles = resp.data
+      })
+    },
+    search: function () {
+      this.page = 1
+      this.load()
+    },
+    sizeChange (sizeChange) {
+      this.size = sizeChange
+      this.load()
+    }
+  },
+  mounted: function () {
+    this.load()
+  }
+}
 </script>
 
 <style>
