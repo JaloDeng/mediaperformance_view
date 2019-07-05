@@ -1,9 +1,21 @@
 <template>
   <div>
+    <h1>新媒体绩效考核系统</h1>
     <el-container>
       <el-header style="padding: 0px;justify-content:space-between;align-items: center">
         <div style="display: inline; text-align:center">
-          <el-input placeholder="" clearable style="width: 500px;"  size="mini" @keyup.enter.native="search" prefix-icon="el-icon-search"></el-input>
+          见报日期：
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.paperPublishTimeStart"></el-input>
+          至
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.paperPublishTimeEnd"></el-input>
+          标题：
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.appTitle"></el-input>
+          栏目：
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.category"></el-input>
+          作者：
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.author"></el-input>
+          打分状态：
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.isScore"></el-input>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search"></el-button>
         </div>
       </el-header>
@@ -16,6 +28,7 @@
             <el-table-column align="center" prop="appTitle" label="标题"></el-table-column>
             <el-table-column align="center" prop="author" label="作者"></el-table-column>
             <el-table-column align="center" prop="wordCount" label="字数"></el-table-column>
+            <el-table-column align="center" prop="editor" label="编辑"></el-table-column>
           </el-table>
           <br />
           <div style="justify-content:space-between;">
@@ -36,12 +49,15 @@ export default {
       articles: [],
       article: {
         id: '',
-        appPublishTime: '',
+        paperPublishTime: '',
+        page: '',
         category: '',
-        appTitle: '',
+        paperTitle: '',
         author: '',
         articleType: '',
         editor: '',
+        appTitle: '',
+        appPublishTime: '',
         wordCount: '',
         clickCount: '',
         url: '',
@@ -50,11 +66,14 @@ export default {
         createUser: '',
         createTime: '',
         updateUser: '',
-        updateTime: ''
+        updateTime: '',
+        isScore: '',
+        paperPublishTimeStart: '',
+        paperPublishTimeEnd: ''
       },
       page: 1,
-      size: 10,
-      sizes: [10, 20, 50],
+      size: 100,
+      sizes: [100, 200, 500],
       tableLoading: false,
       total: 1
     }
