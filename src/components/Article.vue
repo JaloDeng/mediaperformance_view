@@ -5,17 +5,17 @@
       <el-header style="padding: 0px;justify-content:space-between;align-items: center">
         <div style="display: inline; text-align:center">
           见报日期：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.paperPublishTimeStart"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.paperPublishTimeStart"></el-input>
           至
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.paperPublishTimeEnd"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.paperPublishTimeEnd"></el-input>
           标题：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.appTitle"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           栏目：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.category"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.category"></el-input>
           作者：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.author"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
           打分状态：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="article.isScore"></el-input>
+          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.isScore"></el-input>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search"></el-button>
         </div>
       </el-header>
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -66,14 +65,19 @@ export default {
         createUser: '',
         createTime: '',
         updateUser: '',
-        updateTime: '',
-        isScore: '',
-        paperPublishTimeStart: '',
-        paperPublishTimeEnd: ''
+        updateTime: ''
       },
       page: 1,
       size: 100,
       sizes: [100, 200, 500],
+      searchParams: {
+        appTitle: '',
+        author: '',
+        category: '',
+        isScore: '',
+        paperPublishTimeStart: '',
+        paperPublishTimeEnd: ''
+      },
       tableLoading: false,
       total: 1
     }
@@ -84,10 +88,9 @@ export default {
       this.load()
     },
     load: function () {
-      let aaa = axios.create({})
       var _this = this
       this.tableLoading = true
-      aaa.get('http://localhost:8085/article/app').then(resp => {
+      this.postRequest('/article/app', _this.searchParams).then(resp => {
         this.tableLoading = false
         _this.articles = resp.data
       })

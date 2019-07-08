@@ -7,7 +7,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/article',
+      path: '/',
       name: 'Article',
       component: () => import('@/components/Article')
     }
