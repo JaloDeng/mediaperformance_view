@@ -92,7 +92,7 @@ export default {
       this.tableLoading = true
       this.postRequest('/article/app', _this.searchParams).then(resp => {
         this.tableLoading = false
-        _this.articles = resp.data
+        _this.articles = resp.data.data
       })
     },
     search: function () {
