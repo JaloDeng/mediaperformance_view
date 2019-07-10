@@ -76,7 +76,9 @@ export default {
         category: '',
         isScore: '',
         paperPublishTimeStart: '',
-        paperPublishTimeEnd: ''
+        paperPublishTimeEnd: '',
+        pageNum: '',
+        pageSize: ''
       },
       tableLoading: false,
       total: 1
@@ -90,8 +92,11 @@ export default {
     load: function () {
       var _this = this
       this.tableLoading = true
+      _this.searchParams.pageNum = _this.page
+      _this.searchParams.pageSize = _this.size
       this.postRequest('/article/app', _this.searchParams).then(resp => {
         this.tableLoading = false
+        _this.total = resp.data.total
         _this.articles = resp.data.data
       })
     },
