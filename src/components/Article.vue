@@ -32,7 +32,7 @@
           </el-table>
           <br />
           <div style="justify-content:space-between;">
-            <el-pagination background :page-sizes="sizes" :page-size="size" @size-change="sizeChange" :current-page="page" @current-change="currentChange"
+            <el-pagination background :page-sizes="sizes" :page-size="pageSize" @size-change="sizeChange" :current-page="pageNum" @current-change="currentChange"
               layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
           </div>
         </div>
@@ -67,8 +67,8 @@ export default {
         updateUser: '',
         updateTime: ''
       },
-      page: 1,
-      size: 100,
+      pageNum: 1,
+      pageSize: 100,
       sizes: [100, 200, 500],
       searchParams: {
         appTitle: '',
@@ -86,14 +86,14 @@ export default {
   },
   methods: {
     currentChange (currentChange) {
-      this.page = currentChange
+      this.pageNum = currentChange
       this.load()
     },
     load: function () {
       var _this = this
       this.tableLoading = true
-      _this.searchParams.pageNum = _this.page
-      _this.searchParams.pageSize = _this.size
+      _this.searchParams.pageNum = _this.pageNum
+      _this.searchParams.pageSize = _this.pageSize
       this.postRequest('/article/app', _this.searchParams).then(resp => {
         this.tableLoading = false
         _this.total = resp.data.total
@@ -101,11 +101,11 @@ export default {
       })
     },
     search: function () {
-      this.page = 1
+      this.pageNum = 1
       this.load()
     },
     sizeChange (sizeChange) {
-      this.size = sizeChange
+      this.pageSize = sizeChange
       this.load()
     }
   },
