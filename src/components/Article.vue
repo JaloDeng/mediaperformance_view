@@ -8,10 +8,8 @@
           <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.paperPublishTimeStart"></el-input>
           至
           <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.paperPublishTimeEnd"></el-input>
-          标题：
+          APP标题：
           <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
-          栏目：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.category"></el-input>
           作者：
           <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
           打分状态：
@@ -23,12 +21,17 @@
         <div>
           <el-table :data="articles" v-loading="tableLoading" size="mini" border>
             <el-table-column align="center" type="selection" width="30"></el-table-column>
-            <el-table-column align="center" prop="appPublishTime" label="发布时间"></el-table-column>
-            <el-table-column align="center" prop="category" label="栏目"></el-table-column>
-            <el-table-column align="center" prop="appTitle" label="标题"></el-table-column>
-            <el-table-column align="center" prop="author" label="作者"></el-table-column>
-            <el-table-column align="center" prop="wordCount" label="字数"></el-table-column>
-            <el-table-column align="center" prop="editor" label="编辑"></el-table-column>
+            <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间"></el-table-column>
+            <el-table-column align="center" prop="appTitle" label="APP标题"></el-table-column>
+            <el-table-column align="center" width="130" prop="author" label="作者"></el-table-column>
+            <el-table-column align="center" width="130" prop="editor" label="编辑"></el-table-column>
+            <el-table-column align="center" width="130" prop="wordCount" label="字数"></el-table-column>
+            <el-table-column align="center" fixed="right" label="操作" width="160">
+              <template slot-scope="scope">
+                <el-button @click="viewUrl(scope.row)" size="mini" style="padding: 3px 4px 3px 4px;margin: 2px">新闻预览</el-button>
+                <el-button @click="del(scope.row)" size="mini" type="danger" style="padding: 3px 4px 3px 4px;margin: 2px">删除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
           <br />
           <div style="justify-content:space-between;">
@@ -38,6 +41,13 @@
         </div>
       </el-main>
     </el-container>
+    <el-dialog :title="dialogTitle" style="padding: 0px" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="cancelEdit" width="80%">
+      <el-form :model="article" ref="saveForm" style="margin: 0px;padding: 0px;">
+      </el-form>
+      <div>
+        <iframe :src="urlSrc" frameborder="0" width="90%" height="500px"></iframe>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -67,6 +77,8 @@ export default {
         updateUser: '',
         updateTime: ''
       },
+      dialogTitle: '',
+      dialogVisible: false,
       pageNum: 1,
       pageSize: 100,
       sizes: [100, 200, 500],
@@ -81,15 +93,54 @@ export default {
         pageSize: ''
       },
       tableLoading: false,
-      total: 1
+      total: 1,
+      urlSrc: ''
     }
   },
   methods: {
+    cancelEdit () {
+      this.dialogVisible = false
+      this.emptyData()
+      this.load()
+    },
     currentChange (currentChange) {
       this.pageNum = currentChange
       this.load()
     },
-    load: function () {
+    del (row) {
+      this.$confirm('此操作将永久删除[' + row.appTitle + ']，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        alert('点击删除')
+      }).catch(() => {
+      })
+    },
+    emptyData () {
+      this.article = {
+        id: '',
+        paperPublishTime: '',
+        page: '',
+        category: '',
+        paperTitle: '',
+        author: '',
+        articleType: '',
+        editor: '',
+        appTitle: '',
+        appPublishTime: '',
+        wordCount: '',
+        clickCount: '',
+        url: '',
+        level: '',
+        score: '',
+        createUser: '',
+        createTime: '',
+        updateUser: '',
+        updateTime: ''
+      }
+    },
+    load () {
       var _this = this
       this.tableLoading = true
       _this.searchParams.pageNum = _this.pageNum
@@ -100,13 +151,19 @@ export default {
         _this.articles = resp.data.data
       })
     },
-    search: function () {
+    search () {
       this.pageNum = 1
       this.load()
     },
     sizeChange (sizeChange) {
       this.pageSize = sizeChange
       this.load()
+    },
+    viewUrl (row) {
+      var _this = this
+      _this.urlSrc = row.url
+      _this.dialogTitle = '新闻预览'
+      _this.dialogVisible = true
     }
   },
   mounted: function () {
