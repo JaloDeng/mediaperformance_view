@@ -11,11 +11,11 @@
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <br><br>APP日期：
+          <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
-          见报日期：
+          纸媒发布日期：
           <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
             @change="paperSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
@@ -33,15 +33,15 @@
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 100px">
         <div>
-          <el-table :data="articles" v-loading="tableLoading" size="mini" border>
-            <el-table-column align="center" type="selection" width="30"></el-table-column>
-            <el-table-column align="center" width="150" prop="paperPublishTime" label="纸媒发布时间"></el-table-column>
-            <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间"></el-table-column>
+          <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}">
+            <el-table-column align="center" type="index" width="50" prop="no" label="序号"></el-table-column>
+            <el-table-column align="center" width="150" prop="paperPublishTime" label="纸媒发布时间" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
             <el-table-column align="center" prop="paperTitle" label="纸媒标题"></el-table-column>
             <el-table-column align="center" prop="appTitle" label="APP标题"></el-table-column>
-            <el-table-column align="center" width="130" prop="author" label="作者"></el-table-column>
-            <el-table-column align="center" width="130" prop="editor" label="编辑"></el-table-column>
-            <el-table-column align="center" width="130" prop="wordCount" label="字数"></el-table-column>
+            <el-table-column align="center" width="130" prop="author" label="作者" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="130" prop="editor" label="编辑" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="130" prop="wordCount" label="字数" sortable="custom"></el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="160">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="small" type="primary">详情</el-button>
@@ -115,6 +115,7 @@ export default {
         paperEndTime: '',
         pageNum: 1,
         pageSize: 100,
+        orderBy: '',
         type: 1
       },
       selectIsScore: [{
@@ -207,7 +208,9 @@ export default {
       }
     },
     save (formName) {
-      console.log(formName)
+      this.dialogVisible = false
+      this.emptyData()
+      this.load()
     },
     search () {
       this.searchParams.pageNum = 1
@@ -222,6 +225,24 @@ export default {
       _this.urlSrc = row.url
       _this.dialogTitle = '详情'
       _this.dialogVisible = true
+    },
+    tableSortChange (column) {
+      var _this = this
+      if (column.prop === 'paperPublishTime') {
+        _this.searchParams.orderBy = 'paper_publish_time'
+      } else if (column.prop === 'appPublishTime') {
+        _this.searchParams.orderBy = 'app_publish_time'
+      } else if (column.prop === 'wordCount') {
+        _this.searchParams.orderBy = 'word_count'
+      } else {
+        _this.searchParams.orderBy = column.prop
+      }
+      if (column.order === 'descending') {
+        _this.searchParams.orderBy = _this.searchParams.orderBy + ' DESC'
+      } else {
+        _this.searchParams.orderBy = _this.searchParams.orderBy + ' ASC'
+      }
+      this.load()
     }
   },
   mounted: function () {
