@@ -13,11 +13,11 @@
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
           <br><br>APP日期：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
-            @change="appSearchTimeChange" size="small">
+            @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
           见报日期：
           <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
-            @change="paperSearchTimeChange" size="small">
+            @change="paperSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
           <br><br>APP标题：
           <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
@@ -135,8 +135,13 @@ export default {
   methods: {
     appSearchTimeChange () {
       var _this = this
-      _this.searchParams.appStartTime = _this.moment(_this.appSearchTime[0]).format('YYYY-MM-DD HH:mm:ss')
-      _this.searchParams.appEndTime = _this.moment(_this.appSearchTime[1]).format('YYYY-MM-DD HH:mm:ss')
+      if (_this.appSearchTime && _this.appSearchTime.length > 0) {
+        _this.searchParams.appStartTime = _this.appSearchTime[0]
+        _this.searchParams.appEndTime = _this.appSearchTime[1]
+      } else {
+        _this.searchParams.appStartTime = ''
+        _this.searchParams.appEndTime = ''
+      }
     },
     cancelEdit () {
       this.dialogVisible = false
@@ -193,8 +198,13 @@ export default {
     },
     paperSearchTimeChange () {
       var _this = this
-      _this.searchParams.paperStartTime = _this.moment(_this.paperSearchTime[0]).format('YYYY-MM-DD')
-      _this.searchParams.paperEndTime = _this.moment(_this.paperSearchTime[1]).format('YYYY-MM-DD')
+      if (_this.paperSearchTime && _this.paperSearchTime.length > 0) {
+        _this.searchParams.paperStartTime = _this.paperSearchTime[0]
+        _this.searchParams.paperEndTime = _this.paperSearchTime[1]
+      } else {
+        _this.searchParams.paperStartTime = ''
+        _this.searchParams.paperEndTime = ''
+      }
     },
     save (formName) {
       console.log(formName)
