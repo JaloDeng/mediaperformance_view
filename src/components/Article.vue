@@ -51,7 +51,7 @@
           </el-table>
           <br />
           <div style="justify-content:space-between;">
-            <el-pagination background :page-sizes="sizes" :page-size="pageSize" @size-change="sizeChange" :current-page="pageNum" @current-change="currentChange"
+            <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum" @current-change="currentChange"
               layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
           </div>
         </div>
@@ -100,8 +100,6 @@ export default {
       },
       dialogTitle: '',
       dialogVisible: false,
-      pageNum: 1,
-      pageSize: 100,
       paperSearchTime: [],
       sizes: [100, 200, 500],
       searchParams: {
@@ -113,8 +111,8 @@ export default {
         appEndTime: '',
         paperStartTime: '',
         paperEndTime: '',
-        pageNum: '',
-        pageSize: '',
+        pageNum: 1,
+        pageSize: 100,
         searchType: 1
       },
       selectIsScore: [{
@@ -144,7 +142,7 @@ export default {
       this.load()
     },
     currentChange (currentChange) {
-      this.pageNum = currentChange
+      this.searchParams.pageNum = currentChange
       this.load()
     },
     del (row) {
@@ -184,8 +182,6 @@ export default {
     load () {
       var _this = this
       this.tableLoading = true
-      _this.searchParams.pageNum = _this.pageNum
-      _this.searchParams.pageSize = _this.pageSize
       this.postRequest('/article/app', _this.searchParams).then(resp => {
         this.tableLoading = false
         _this.total = resp.data.total
@@ -201,11 +197,11 @@ export default {
       console.log(formName)
     },
     search () {
-      this.pageNum = 1
+      this.searchParams.pageNum = 1
       this.load()
     },
     sizeChange (sizeChange) {
-      this.pageSize = sizeChange
+      this.searchParams.pageSize = sizeChange
       this.load()
     },
     showEditView (row) {
