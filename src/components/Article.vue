@@ -4,7 +4,7 @@
     <el-container>
       <el-header style="padding: 0px;justify-content:space-between;align-items: center">
         <div style="display: inline; text-align:center">
-          <el-radio-group v-model="searchParams.searchType" size="small" @change="search">
+          <el-radio-group v-model="searchParams.type" size="small" @change="search">
             <el-radio-button label="1">只发APP</el-radio-button>
             <el-radio-button label="2">先发纸媒再发APP</el-radio-button>
             <el-radio-button label="3">先发APP再发纸媒</el-radio-button>
@@ -79,15 +79,17 @@ export default {
       articles: [],
       article: {
         id: '',
+        type: '',
+        newsSourceId: '',
         paperPublishTime: '',
+        appPublishTime: '',
         page: '',
         category: '',
-        paperTitle: '',
-        author: '',
         articleType: '',
-        editor: '',
+        paperTitle: '',
         appTitle: '',
-        appPublishTime: '',
+        author: '',
+        editor: '',
         wordCount: '',
         clickCount: '',
         url: '',
@@ -113,7 +115,7 @@ export default {
         paperEndTime: '',
         pageNum: 1,
         pageSize: 100,
-        searchType: 1
+        type: 1
       },
       selectIsScore: [{
         value: '',
@@ -159,6 +161,7 @@ export default {
       this.article = {
         id: '',
         type: '',
+        newsSourceId: '',
         paperPublishTime: '',
         appPublishTime: '',
         page: '',
@@ -182,7 +185,7 @@ export default {
     load () {
       var _this = this
       this.tableLoading = true
-      this.postRequest('/article/app', _this.searchParams).then(resp => {
+      this.postRequest('/article/find', _this.searchParams).then(resp => {
         this.tableLoading = false
         _this.total = resp.data.total
         _this.articles = resp.data.data
