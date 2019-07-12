@@ -44,8 +44,8 @@
             <el-table-column align="center" width="130" prop="wordCount" label="字数"></el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="160">
               <template slot-scope="scope">
-                <el-button @click="showEditView(scope.row)" size="mini" style="padding: 3px 4px 3px 4px;margin: 2px">详情</el-button>
-                <el-button @click="del(scope.row)" size="mini" type="danger" style="padding: 3px 4px 3px 4px;margin: 2px">删除</el-button>
+                <el-button @click="showEditView(scope.row)" size="small" type="primary">详情</el-button>
+                <el-button @click="del(scope.row)" hidden="hidden" size="small" type="danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
