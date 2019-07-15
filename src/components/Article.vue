@@ -191,7 +191,7 @@ export default {
     load () {
       var _this = this
       this.tableLoading = true
-      this.postRequest('/article/find', _this.searchParams).then(resp => {
+      this.getRequest('/article', _this.searchParams).then(resp => {
         this.tableLoading = false
         _this.total = resp.data.total
         _this.articles = resp.data.data

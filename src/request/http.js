@@ -4,11 +4,11 @@ import { Message } from 'element-ui'
 let baseURL = ''
 
 if (process.env.NODE_ENV === 'development') {
-  baseURL = 'http://localhost:8085'
+  baseURL = 'http://172.16.20.193:8085'
 } else if (process.env.NODE_ENV === 'debug') {
-  baseURL = 'http://localhost:8085'
+  baseURL = 'http://172.16.20.193:8085'
 } else if (process.env.NODE_ENV === 'production') {
-  baseURL = 'http://localhost:8080'
+  baseURL = 'http://172.16.20.193:8080'
 }
 
 // 请求超时时间
@@ -40,6 +40,7 @@ axios.interceptors.response.use(response => {
 export const getRequest = (url, params) => {
   return axios({
     method: 'get',
+    params: params,
     url: `${baseURL}${url}`
   })
 }
