@@ -23,7 +23,13 @@ axios.interceptors.request.use(config => {
 
 // 响应拦截器
 axios.interceptors.response.use(response => {
-  if (response.status && response.status === 200) {}
+  if (response.status && response.status === 200) {
+    if (response.data && response.data.success && response.data.message) {
+      Message.success({ message: response.data.message })
+    } else if (response.data && !response.data.success && response.data.message) {
+      Message.error({ message: response.data.message })
+    }
+  }
   return response
 }, error => {
   if (error.response.status === 504) {
@@ -53,5 +59,12 @@ export const postRequest = (url, params) => {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
+  })
+}
+
+export const deleteRequest = (url) => {
+  return axios({
+    method: 'delete',
+    url: `${baseURL}${url}`
   })
 }

@@ -159,7 +159,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        alert('点击删除')
+        this.deleteRequest('/article/' + row.id).then(resp => {
+          if (resp && resp.status === 200 && resp.data.success) {
+            this.load()
+          }
+        })
       }).catch(() => {
       })
     },
