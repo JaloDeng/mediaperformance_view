@@ -2,8 +2,8 @@
   <div>
     <h1>新媒体绩效考核系统</h1>
     <el-container>
-      <el-header style="padding: 0px;justify-content:space-between;align-items: center">
-        <div style="display: inline; text-align:center">
+      <el-header>
+        <div>
           <el-radio-group v-model="searchParams.type" size="small" @change="search">
             <el-radio-button label="1">只发APP</el-radio-button>
             <el-radio-button label="2">先发纸媒再发APP</el-radio-button>
@@ -11,6 +11,7 @@
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
           <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
@@ -51,19 +52,55 @@
           </el-table>
           <br />
           <div style="justify-content:space-between;">
-            <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum" @current-change="currentChange"
-              layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
+            <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum"
+              @current-change="currentChange" layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
           </div>
         </div>
       </el-main>
     </el-container>
-    <el-dialog :title="dialogTitle" style="padding: 0px" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="cancelEdit" width="80%">
-      <el-form :model="article" ref="saveForm" style="margin: 0px;padding: 0px;">
+    <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="cancelEdit" width="80%" center>
+      <el-form :model="article" ref="saveForm">
+        <el-form-item label="类别"  label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.type" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="纸媒发布时间" label-width="120px">
+          <el-input prefix-icon="el-icon-date" v-model="article.paperPublishTime" size="mini" placeholder="请输入纸媒发布时间"></el-input>
+        </el-form-item>
+        <el-form-item label="APP发布时间" label-width="120px">
+          <el-input prefix-icon="el-icon-time" v-model="article.appPublishTime" size="mini" placeholder="请输入APP发布时间"></el-input>
+        </el-form-item>
+        <el-form-item label="纸媒标题" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题"></el-input>
+        </el-form-item>
+        <el-form-item label="APP标题" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.appTitle" size="mini" placeholder="请输入APP标题"></el-input>
+        </el-form-item>
+        <el-form-item label="作者" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.author" size="mini" placeholder="请输入作者"></el-input>
+        </el-form-item>
+        <el-form-item label="编辑" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.editor" size="mini" placeholder="请输入编辑"></el-input>
+        </el-form-item>
+        <el-form-item label="字数" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.wordCount" size="mini" placeholder="请输入字数"></el-input>
+        </el-form-item>
+        <el-form-item label="浏览量" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.clickCount" size="mini" placeholder="请输入浏览量"></el-input>
+        </el-form-item>
+        <el-form-item label="链接" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.url" size="mini" placeholder="请输入链接"></el-input>
+        </el-form-item>
+        <el-form-item label="等级" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.level" size="mini" placeholder="请输入等级"></el-input>
+        </el-form-item>
+        <el-form-item label="分数" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.score" size="mini" placeholder="请输入分数"></el-input>
+        </el-form-item>
       </el-form>
       <div>
-        <iframe :src="urlSrc" frameborder="0" width="90%" height="500px"></iframe>
+        <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
       </div>
-      <span slot="footer" class="dialog-footer" style="text-align: center; display: block;">
+      <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="save('saveForm')">确认</el-button>
         <el-button size="mini" @click="cancelEdit">取消</el-button>
       </span>
@@ -129,8 +166,7 @@ export default {
         label: '已打分'
       }],
       tableLoading: false,
-      total: 1,
-      urlSrc: ''
+      total: 1
     }
   },
   methods: {
@@ -212,9 +248,14 @@ export default {
       }
     },
     save (formName) {
-      this.dialogVisible = false
-      this.emptyData()
-      this.load()
+      var _this = this
+      _this.tableLoading = true
+      this.putRequest('/article', _this.article).then(resp => {
+        _this.tableLoading = false
+        _this.dialogVisible = false
+        _this.emptyData()
+        _this.load()
+      })
     },
     search () {
       this.searchParams.pageNum = 1
@@ -224,10 +265,18 @@ export default {
       this.searchParams.pageSize = sizeChange
       this.load()
     },
+    showAddView () {
+      this.dialogTitle = '添加'
+      this.dialogVisible = true
+    },
     showEditView (row) {
       var _this = this
-      _this.urlSrc = row.url
-      _this.dialogTitle = '详情'
+      this.tableLoading = true
+      this.getRequest('/article/' + row.id).then(resp => {
+        _this.article = resp.data.data
+      })
+      _this.tableLoading = false
+      _this.dialogTitle = '编辑详情'
       _this.dialogVisible = true
     },
     tableSortChange (column) {

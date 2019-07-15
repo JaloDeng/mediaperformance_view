@@ -62,6 +62,17 @@ export const postRequest = (url, params) => {
   })
 }
 
+export const putRequest = (url, params) => {
+  return axios({
+    method: 'put',
+    url: `${baseURL}${url}`,
+    data: params,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
 export const deleteRequest = (url) => {
   return axios({
     method: 'delete',
