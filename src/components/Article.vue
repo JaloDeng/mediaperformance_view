@@ -281,19 +281,10 @@ export default {
     },
     tableSortChange (column) {
       var _this = this
-      if (column.prop === 'paperPublishTime') {
-        _this.searchParams.orderBy = 'paper_publish_time'
-      } else if (column.prop === 'appPublishTime') {
-        _this.searchParams.orderBy = 'app_publish_time'
-      } else if (column.prop === 'wordCount') {
-        _this.searchParams.orderBy = 'word_count'
-      } else {
-        _this.searchParams.orderBy = column.prop
-      }
       if (column.order === 'descending') {
-        _this.searchParams.orderBy = _this.searchParams.orderBy + ' DESC'
+        _this.searchParams.orderBy = column.prop + ' DESC'
       } else {
-        _this.searchParams.orderBy = _this.searchParams.orderBy + ' ASC'
+        _this.searchParams.orderBy = column.prop + ' ASC'
       }
       this.load()
     }
