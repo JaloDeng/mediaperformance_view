@@ -53,7 +53,7 @@
           <br />
           <div style="justify-content:space-between;">
             <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum"
-              @current-change="currentChange" layout="sizes, prev, pager, next, ->, total" :total="total" style="text-align:center"></el-pagination>
+              @current-change="currentChange" layout="sizes, prev, pager, next, jumper, ->, total" :total="total" style="text-align:center"></el-pagination>
           </div>
         </div>
       </el-main>
