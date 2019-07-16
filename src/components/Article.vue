@@ -4,7 +4,7 @@
     <el-container>
       <el-header>
         <div>
-          <el-radio-group v-model="searchParams.type" size="small" @change="search">
+          <el-radio-group v-model="searchParams.type" size="small" @change="changeType">
             <el-radio-button label="1">只发APP</el-radio-button>
             <el-radio-button label="2">先发纸媒再发APP</el-radio-button>
             <el-radio-button label="3">先发APP再发纸媒</el-radio-button>
@@ -21,11 +21,11 @@
             @change="paperSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
           <br><br>APP标题：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
+          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           纸媒标题：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
+          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
           作者：
-          <el-input clearable style="width: 200px;"  size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
+          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
           打分状态：
           <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search">
             <el-option v-for="item in selectIsScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -185,9 +185,28 @@ export default {
       this.emptyData()
       this.load()
     },
+    changeType (type) {
+      this.currentTime(type)
+      this.searchParams.pageNum = 1
+      this.load()
+    },
     currentChange (currentChange) {
       this.searchParams.pageNum = currentChange
       this.load()
+    },
+    currentTime (type) {
+      var _this = this
+      var now = new Date()
+      var currentDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())).toISOString().slice(0, 10)
+      if (!type || type === '' || type === '1') {
+        _this.appSearchTime = [currentDate + ' 00:00:00', currentDate + ' 23:59:59']
+        _this.paperSearchTime = []
+      } else {
+        _this.appSearchTime = []
+        _this.paperSearchTime = [currentDate, currentDate]
+      }
+      this.appSearchTimeChange()
+      this.paperSearchTimeChange()
     },
     del (row) {
       this.$confirm('此操作将永久删除[' + row.appTitle + ']，是否继续？', '提示', {
@@ -290,6 +309,7 @@ export default {
     }
   },
   mounted: function () {
+    this.currentTime()
     this.load()
   }
 }
