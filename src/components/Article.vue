@@ -214,11 +214,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.deleteRequest('/article/' + row.id).then(resp => {
-          if (resp && resp.status === 200 && resp.data.success) {
-            this.load()
-          }
-        })
+        // this.deleteRequest('/article/' + row.id).then(resp => {
+        //   if (resp && resp.status === 200 && resp.data.success) {
+        //     this.load()
+        //   }
+        // })
+        this.$message('功能暂未开放')
       }).catch(() => {
       })
     },
@@ -267,14 +268,15 @@ export default {
       }
     },
     save (formName) {
-      var _this = this
-      _this.tableLoading = true
-      this.putRequest('/article', _this.article).then(resp => {
-        _this.tableLoading = false
-        _this.dialogVisible = false
-        _this.emptyData()
-        _this.load()
-      })
+      // var _this = this
+      // _this.tableLoading = true
+      // this.putRequest('/article', _this.article).then(resp => {
+      //   _this.tableLoading = false
+      //   _this.dialogVisible = false
+      //   _this.emptyData()
+      //   _this.load()
+      // })
+      this.$message('功能暂未开放')
     },
     search () {
       this.searchParams.pageNum = 1
