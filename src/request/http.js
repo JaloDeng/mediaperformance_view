@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'debug') {
   baseURL = 'http://172.16.20.193:8085'
 } else if (process.env.NODE_ENV === 'production') {
-  baseURL = 'http://172.16.20.193:8080'
+  baseURL = 'http://172.16.8.253:8080'
 }
 
 // 请求超时时间
