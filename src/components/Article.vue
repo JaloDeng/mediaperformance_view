@@ -165,7 +165,7 @@ export default {
         value: '',
         label: '全部'
       }, {
-        value: 0,
+        value: -1,
         label: '未打分'
       }, {
         value: 1,
@@ -276,15 +276,15 @@ export default {
       }
     },
     save (formName) {
-      // var _this = this
-      // _this.tableLoading = true
-      // this.putRequest('/article', _this.article).then(resp => {
-      //   _this.tableLoading = false
-      //   _this.dialogVisible = false
-      //   _this.emptyData()
-      //   _this.load()
-      // })
-      this.$message('功能暂未开放')
+      var _this = this
+      _this.tableLoading = true
+      this.putRequest('/article', _this.article).then(resp => {
+        _this.tableLoading = false
+        _this.dialogVisible = false
+        _this.emptyData()
+        _this.load()
+      })
+      // this.$message('功能暂未开放')
     },
     search () {
       this.searchParams.pageNum = 1
