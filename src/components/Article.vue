@@ -11,7 +11,7 @@
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
+          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
@@ -91,7 +91,7 @@
           <el-input prefix-icon="el-icon-edit" v-model="article.url" size="mini" placeholder="请输入链接"></el-input>
         </el-form-item>
         <el-form-item label="等级" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.level" size="mini" placeholder="请输入等级"></el-input>
+          <el-input prefix-icon="el-icon-edit" v-model="article.scoreId" size="mini" placeholder="请输入等级"></el-input>
         </el-form-item>
         <el-form-item label="分数" label-width="120px">
           <el-input prefix-icon="el-icon-edit" v-model="article.score" size="mini" placeholder="请输入分数"></el-input>
@@ -117,20 +117,20 @@ export default {
       article: {
         id: '',
         type: '',
+        newsType: '',
         newsSourceId: '',
+        newsTransferId: '',
         paperPublishTime: '',
         appPublishTime: '',
         pageName: '',
         category: '',
-        articleType: '',
         paperTitle: '',
         appTitle: '',
         author: '',
         editor: '',
         wordCount: '',
-        clickCount: '',
         url: '',
-        level: '',
+        scoreId: '',
         score: '',
         createUser: '',
         createTime: '',
@@ -142,18 +142,19 @@ export default {
       paperSearchTime: [],
       sizes: [100, 200, 500],
       searchParams: {
-        appTitle: '',
-        paperTitle: '',
-        author: '',
-        isScore: '',
-        appStartTime: '',
-        appEndTime: '',
+        type: 1,
         paperStartTime: '',
         paperEndTime: '',
+        appStartTime: '',
+        appEndTime: '',
+        paperTitle: '',
+        appTitle: '',
+        author: '',
+        isScore: '',
+        scoreId: '',
         pageNum: 1,
         pageSize: 100,
-        orderBy: '',
-        type: 1
+        orderBy: ''
       },
       selectIsScore: [{
         value: '',
@@ -197,13 +198,14 @@ export default {
     currentTime (type) {
       var _this = this
       var now = new Date()
-      var currentDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())).toISOString().slice(0, 10)
+      var preDate = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      var preDateStr = new Date(Date.UTC(preDate.getFullYear(), preDate.getMonth(), preDate.getDate())).toISOString().slice(0, 10)
       if (!type || type === '' || type === '1') {
-        _this.appSearchTime = [currentDate + ' 00:00:00', currentDate + ' 23:59:59']
+        _this.appSearchTime = [preDateStr + ' 00:00:00', preDateStr + ' 23:59:59']
         _this.paperSearchTime = []
       } else {
         _this.appSearchTime = []
-        _this.paperSearchTime = [currentDate, currentDate]
+        _this.paperSearchTime = [preDateStr, preDateStr]
       }
       this.appSearchTimeChange()
       this.paperSearchTimeChange()
@@ -227,20 +229,20 @@ export default {
       this.article = {
         id: '',
         type: '',
+        newsType: '',
         newsSourceId: '',
+        newsTransferId: '',
         paperPublishTime: '',
         appPublishTime: '',
         pageName: '',
         category: '',
-        articleType: '',
         paperTitle: '',
         appTitle: '',
         author: '',
         editor: '',
         wordCount: '',
-        clickCount: '',
         url: '',
-        level: '',
+        scoreId: '',
         score: '',
         createUser: '',
         createTime: '',
