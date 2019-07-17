@@ -11,7 +11,7 @@
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
           <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
@@ -43,6 +43,7 @@
             <el-table-column align="center" width="130" prop="author" label="作者" sortable="custom"></el-table-column>
             <el-table-column align="center" width="130" prop="editor" label="编辑" sortable="custom"></el-table-column>
             <el-table-column align="center" width="130" prop="wordCount" label="字数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="130" prop="remark" label="备注"></el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="160">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="small" type="primary">详情</el-button>
@@ -96,6 +97,9 @@
         <el-form-item label="分数" label-width="120px">
           <el-input prefix-icon="el-icon-edit" v-model="article.score" size="mini" placeholder="请输入分数"></el-input>
         </el-form-item>
+        <el-form-item label="备注" label-width="120px">
+          <el-input prefix-icon="el-icon-edit" v-model="article.remark" size="mini" placeholder="请输入备注"></el-input>
+        </el-form-item>
       </el-form>
       <div>
         <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
@@ -130,6 +134,7 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
+        remark: '',
         scoreId: '',
         score: '',
         createUser: '',
@@ -242,6 +247,7 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
+        remark: '',
         scoreId: '',
         score: '',
         createUser: '',
