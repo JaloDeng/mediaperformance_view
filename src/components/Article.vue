@@ -11,7 +11,7 @@
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
+          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
@@ -38,12 +38,14 @@
             <el-table-column align="center" type="index" width="50" prop="no" label="序号"></el-table-column>
             <el-table-column align="center" width="150" prop="paperPublishTime" label="纸媒发布时间" sortable="custom"></el-table-column>
             <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
-            <el-table-column align="center" prop="paperTitle" label="纸媒标题"></el-table-column>
-            <el-table-column align="center" prop="appTitle" label="APP标题"></el-table-column>
+            <el-table-column align="center" width="350" prop="paperTitle" label="纸媒标题"></el-table-column>
+            <el-table-column align="center" width="350" prop="appTitle" label="APP标题"></el-table-column>
             <el-table-column align="center" width="130" prop="author" label="作者" sortable="custom"></el-table-column>
             <el-table-column align="center" width="130" prop="editor" label="编辑" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="130" prop="wordCount" label="字数" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="130" prop="remark" label="备注"></el-table-column>
+            <el-table-column align="center" width="100" prop="wordCount" label="字数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="100" prop="scoreId" label="等级"></el-table-column>
+            <el-table-column align="center" width="100" prop="score" label="分数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="500" prop="remark" label="备注"></el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="160">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="small" type="primary">详情</el-button>
@@ -61,49 +63,82 @@
     </el-container>
     <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="cancelEdit" width="80%" center>
       <el-form :model="article" ref="saveForm">
-        <el-form-item label="类别"  label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.type" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="纸媒发布时间" label-width="120px">
-          <el-input prefix-icon="el-icon-date" v-model="article.paperPublishTime" size="mini" placeholder="请输入纸媒发布时间"></el-input>
-        </el-form-item>
-        <el-form-item label="APP发布时间" label-width="120px">
-          <el-input prefix-icon="el-icon-time" v-model="article.appPublishTime" size="mini" placeholder="请输入APP发布时间"></el-input>
-        </el-form-item>
-        <el-form-item label="纸媒标题" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题"></el-input>
-        </el-form-item>
-        <el-form-item label="APP标题" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.appTitle" size="mini" placeholder="请输入APP标题"></el-input>
-        </el-form-item>
-        <el-form-item label="作者" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.author" size="mini" placeholder="请输入作者"></el-input>
-        </el-form-item>
-        <el-form-item label="编辑" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.editor" size="mini" placeholder="请输入编辑"></el-input>
-        </el-form-item>
-        <el-form-item label="字数" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.wordCount" size="mini" placeholder="请输入字数"></el-input>
-        </el-form-item>
-        <el-form-item label="浏览量" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.clickCount" size="mini" placeholder="请输入浏览量"></el-input>
-        </el-form-item>
-        <el-form-item label="链接" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.url" size="mini" placeholder="请输入链接"></el-input>
-        </el-form-item>
-        <el-form-item label="等级" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.scoreId" size="mini" placeholder="请输入等级"></el-input>
-        </el-form-item>
-        <el-form-item label="分数" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.score" size="mini" placeholder="请输入分数"></el-input>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="类别"  label-width="120px">
+              <el-select v-model="article.type" placeholder="请选择" size="mini">
+                <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="链接" label-width="120px">
+              <el-input v-model="article.url" size="mini" placeholder="请输入链接"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+          <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="纸媒标题" label-width="120px">
+              <el-input v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="APP标题" label-width="120px">
+              <el-input v-model="article.appTitle" size="mini" placeholder="请输入APP标题"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="作者" label-width="120px">
+              <el-input v-model="article.author" size="mini" placeholder="请输入作者"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="编辑" label-width="120px">
+              <el-input v-model="article.editor" size="mini" placeholder="请输入编辑"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="纸媒发布时间" label-width="120px">
+              <el-date-picker v-model="article.paperPublishTime" type="date" size="mini" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="APP发布时间" label-width="120px">
+              <el-date-picker v-model="article.appPublishTime" type="datetime" size="mini" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="字数" label-width="120px">
+              <el-input-number v-model="article.wordCount" :min="0" size="mini"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="浏览量" label-width="120px">
+              <el-input-number v-model="article.clickCount" size="mini"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="等级分" label-width="120px">
+          <el-select v-model="article.scoreId" placeholder="请选择" size="mini">
+            <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" label-width="120px">
-          <el-input prefix-icon="el-icon-edit" v-model="article.remark" size="mini" placeholder="请输入备注"></el-input>
+          <el-input v-model="article.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
-      <div>
-        <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
-      </div>
+      <el-row type="flex">
+        <el-col :span="24">
+          <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
+        </el-col>
+      </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="primary" @click="save('saveForm')">确认</el-button>
         <el-button size="mini" @click="cancelEdit">取消</el-button>
@@ -161,16 +196,9 @@ export default {
         pageSize: 100,
         orderBy: ''
       },
-      selectIsScore: [{
-        value: '',
-        label: '全部'
-      }, {
-        value: -1,
-        label: '未打分'
-      }, {
-        value: 1,
-        label: '已打分'
-      }],
+      selectIsScore: [{value: '', label: '全部'}, {value: -1, label: '未打分'}, {value: 1, label: '已打分'}],
+      selectScore: [],
+      selectType: [{label: '只发APP', value: 1}, {label: '先发纸媒再发APP', value: 2}, {label: '先发APP再发纸媒', value: 3}, {label: '只发报纸', value: 4}],
       tableLoading: false,
       total: 1
     }
@@ -256,6 +284,20 @@ export default {
         updateTime: ''
       }
     },
+    getScoreData () {
+      this.getRequest('/article/score').then(resp => {
+        if (resp.data && resp.data.data) {
+          var scores = resp.data.data
+          for (let index = 0; index < scores.length; index++) {
+            var item = {
+              'label': scores[index].id + ' ' + scores[index].score,
+              'value': scores[index].id
+            }
+            this.selectScore.push(item)
+          }
+        }
+      })
+    },
     load () {
       var _this = this
       this.tableLoading = true
@@ -276,15 +318,15 @@ export default {
       }
     },
     save (formName) {
-      var _this = this
-      _this.tableLoading = true
-      this.putRequest('/article', _this.article).then(resp => {
-        _this.tableLoading = false
-        _this.dialogVisible = false
-        _this.emptyData()
-        _this.load()
-      })
-      // this.$message('功能暂未开放')
+      // var _this = this
+      // _this.tableLoading = true
+      // this.putRequest('/article', _this.article).then(resp => {
+      //   _this.tableLoading = false
+      //   _this.dialogVisible = false
+      //   _this.emptyData()
+      //   _this.load()
+      // })
+      this.$message('功能暂未开放')
     },
     search () {
       this.searchParams.pageNum = 1
@@ -321,6 +363,7 @@ export default {
   mounted: function () {
     this.currentTime()
     this.load()
+    this.getScoreData()
   }
 }
 </script>
