@@ -4,15 +4,11 @@
     <el-container>
       <el-header>
         <div>
-          <el-radio-group v-model="searchParams.type" size="mini" @change="changeType">
-            <el-radio-button label="1">只发APP</el-radio-button>
-            <el-radio-button label="2">先发APP再发纸媒</el-radio-button>
-            <el-radio-button label="3">先发纸媒再发APP</el-radio-button>
-            <el-radio-button label="4">只发报纸</el-radio-button>
-          </el-radio-group>
-          &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
-          <br><br>APP发布时间：
+          类型：
+          <el-select v-model="searchParams.type" placeholder="请选择" @change="changeType" size="mini">
+            <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          APP发布时间：
           <el-date-picker v-model="appSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
             @change="appSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
@@ -30,9 +26,11 @@
           <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini">
             <el-option v-for="item in selectIsScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
+          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
+          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
         </div>
       </el-header>
-      <el-main style="padding-left: 0px;padding-top: 100px">
+      <el-main style="padding-left: 0px;padding-top: 30px">
         <div>
           <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}">
             <el-table-column align="center" type="index" width="50" prop="no" label="序号"></el-table-column>
@@ -221,8 +219,8 @@ export default {
       this.emptyData()
       this.load()
     },
-    changeType (type) {
-      this.currentTime(type)
+    changeType () {
+      this.currentTime()
       this.searchParams.pageNum = 1
       this.load()
     },
@@ -230,12 +228,13 @@ export default {
       this.searchParams.pageNum = currentChange
       this.load()
     },
-    currentTime (type) {
+    currentTime () {
       var _this = this
       var now = new Date()
       var preDate = new Date(now.getTime() - 24 * 60 * 60 * 1000)
       var preDateStr = new Date(Date.UTC(preDate.getFullYear(), preDate.getMonth(), preDate.getDate())).toISOString().slice(0, 10)
-      if (!type || type === '' || type === '1' || type === '2') {
+      var type = _this.searchParams.type
+      if (!type || type === 1 || type === 2) {
         _this.appSearchTime = [preDateStr + ' 00:00:00', preDateStr + ' 23:59:59']
         _this.paperSearchTime = []
       } else {
