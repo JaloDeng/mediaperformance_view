@@ -67,66 +67,66 @@
           <el-col :span="12">
             <el-form-item label="类别"  label-width="120px">
               <el-select v-model="article.type" placeholder="请选择" size="mini">
-                <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value" :disabled="isDisabledEditArticle"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="链接" label-width="120px">
-              <el-input v-model="article.url" size="mini" placeholder="请输入链接"></el-input>
+              <el-input v-model="article.url" size="mini" placeholder="请输入链接" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
           <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="纸媒标题" label-width="120px">
-              <el-input v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题"></el-input>
+              <el-input v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="APP标题" label-width="120px">
-              <el-input v-model="article.appTitle" size="mini" placeholder="请输入APP标题"></el-input>
+              <el-input v-model="article.appTitle" size="mini" placeholder="请输入APP标题" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="作者" label-width="120px">
-              <el-input v-model="article.author" size="mini" placeholder="请输入作者"></el-input>
+              <el-input v-model="article.author" size="mini" placeholder="请输入作者" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="编辑" label-width="120px">
-              <el-input v-model="article.editor" size="mini" placeholder="请输入编辑"></el-input>
+              <el-input v-model="article.editor" size="mini" placeholder="请输入编辑" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="纸媒发布时间" label-width="120px">
-              <el-date-picker v-model="article.paperPublishTime" type="date" size="mini" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
+              <el-date-picker v-model="article.paperPublishTime" type="date" size="mini" placeholder="选择日期" value-format="yyyy-MM-dd" :readonly="isDisabledEditArticle"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="APP发布时间" label-width="120px">
-              <el-date-picker v-model="article.appPublishTime" type="datetime" size="mini" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+              <el-date-picker v-model="article.appPublishTime" type="datetime" size="mini" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" :readonly="isDisabledEditArticle"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="字数" label-width="120px">
-              <el-input-number v-model="article.wordCount" :min="0" size="mini"></el-input-number>
+              <el-input-number v-model="article.wordCount" :min="0" size="mini" :disabled="isDisabledEditArticle"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="浏览量" label-width="120px">
-              <el-input-number v-model="article.clickCount" size="mini"></el-input-number>
+              <el-input-number v-model="article.clickCount" size="mini" :disabled="isDisabledEditArticle"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="等级分" label-width="120px">
-          <el-select v-model="article.scoreId" placeholder="请选择" size="mini">
+          <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :disabled="banEditScoreId">
             <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -177,6 +177,8 @@ export default {
         updateUser: '',
         updateTime: ''
       },
+      isDisabledEditArticle: true,
+      banEditScoreId: false,
       dialogTitle: '',
       dialogVisible: false,
       paperSearchTime: [],
@@ -283,6 +285,8 @@ export default {
         updateUser: '',
         updateTime: ''
       }
+      this.isDisabledEditArticle = true
+      this.banEditScoreId = false
     },
     getScoreData () {
       this.getRequest('/article/score').then(resp => {
@@ -318,15 +322,14 @@ export default {
       }
     },
     save (formName) {
-      // var _this = this
-      // _this.tableLoading = true
-      // this.putRequest('/article', _this.article).then(resp => {
-      //   _this.tableLoading = false
-      //   _this.dialogVisible = false
-      //   _this.emptyData()
-      //   _this.load()
-      // })
-      this.$message('功能暂未开放')
+      var _this = this
+      _this.tableLoading = true
+      this.putRequest('/article', _this.article).then(resp => {
+        _this.tableLoading = false
+        _this.dialogVisible = false
+        _this.emptyData()
+        _this.load()
+      })
     },
     search () {
       this.searchParams.pageNum = 1
@@ -339,12 +342,18 @@ export default {
     showAddView () {
       this.dialogTitle = '添加'
       this.dialogVisible = true
+      this.isDisabledEditArticle = false
+      this.banEditScoreId = false
     },
     showEditView (row) {
       var _this = this
       this.tableLoading = true
+      this.isDisabledEditArticle = true
       this.getRequest('/article/' + row.id).then(resp => {
         _this.article = resp.data.data
+        if (_this.article.scoreId && _this.article.scoreId !== '') {
+          this.banEditScoreId = true
+        }
       })
       _this.tableLoading = false
       _this.dialogTitle = '编辑详情'
