@@ -13,8 +13,8 @@
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
           <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP发布时间：
-          <el-date-picker v-model="appSearchTime" type="datetimerange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
-            @change="appSearchTimeChange" size="small" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
+          <el-date-picker v-model="appSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
+            @change="appSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
           纸媒发布日期：
           <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
@@ -209,8 +209,8 @@ export default {
     appSearchTimeChange () {
       var _this = this
       if (_this.appSearchTime && _this.appSearchTime.length > 0) {
-        _this.searchParams.appStartTime = _this.appSearchTime[0]
-        _this.searchParams.appEndTime = _this.appSearchTime[1]
+        _this.searchParams.appStartTime = _this.appSearchTime[0].substring(0, 10) + ' 00:00:00'
+        _this.searchParams.appEndTime = _this.appSearchTime[1].substring(0, 10) + ' 23:59:59'
       } else {
         _this.searchParams.appStartTime = ''
         _this.searchParams.appEndTime = ''
