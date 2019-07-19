@@ -1,24 +1,24 @@
 <template>
   <div>
-    <h1>新媒体绩效考核系统</h1>
+    <h2>新媒体绩效考核系统</h2>
     <el-container>
       <el-header>
         <div>
-          <el-radio-group v-model="searchParams.type" size="small" @change="changeType">
+          <el-radio-group v-model="searchParams.type" size="mini" @change="changeType">
             <el-radio-button label="1">只发APP</el-radio-button>
-            <el-radio-button label="2">先发纸媒再发APP</el-radio-button>
-            <el-radio-button label="3">先发APP再发纸媒</el-radio-button>
+            <el-radio-button label="2">先发APP再发纸媒</el-radio-button>
+            <el-radio-button label="3">先发纸媒再发APP</el-radio-button>
             <el-radio-button label="4">只发报纸</el-radio-button>
           </el-radio-group>
           &#12288;&#12288;<el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
           <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP发布时间：
           <el-date-picker v-model="appSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
-            @change="appSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+            @change="appSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
           纸媒发布日期：
           <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
-            @change="paperSearchTimeChange" size="small" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+            @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
           <br><br>APP标题：
           <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
@@ -27,7 +27,7 @@
           作者：
           <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
           打分状态：
-          <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search">
+          <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini">
             <el-option v-for="item in selectIsScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
@@ -200,7 +200,7 @@ export default {
       },
       selectIsScore: [{value: '', label: '全部'}, {value: -1, label: '未打分'}, {value: 1, label: '已打分'}],
       selectScore: [],
-      selectType: [{label: '只发APP', value: 1}, {label: '先发纸媒再发APP', value: 2}, {label: '先发APP再发纸媒', value: 3}, {label: '只发报纸', value: 4}],
+      selectType: [{label: '只发APP', value: 1}, {label: '先发APP再发纸媒', value: 2}, {label: '先发纸媒再发APP', value: 3}, {label: '只发报纸', value: 4}],
       tableLoading: false,
       total: 1
     }
@@ -235,7 +235,7 @@ export default {
       var now = new Date()
       var preDate = new Date(now.getTime() - 24 * 60 * 60 * 1000)
       var preDateStr = new Date(Date.UTC(preDate.getFullYear(), preDate.getMonth(), preDate.getDate())).toISOString().slice(0, 10)
-      if (!type || type === '' || type === '1') {
+      if (!type || type === '' || type === '1' || type === '2') {
         _this.appSearchTime = [preDateStr + ' 00:00:00', preDateStr + ' 23:59:59']
         _this.paperSearchTime = []
       } else {
@@ -293,9 +293,14 @@ export default {
         if (resp.data && resp.data.data) {
           var scores = resp.data.data
           for (let index = 0; index < scores.length; index++) {
+            var sid = scores[index].id
+            var sscore = scores[index].score
+            if (sid === '手动打分') {
+              sscore = ''
+            }
             var item = {
-              'label': scores[index].id + ' ' + scores[index].score,
-              'value': scores[index].id
+              'label': sid + ' ' + sscore,
+              'value': sid
             }
             this.selectScore.push(item)
           }
