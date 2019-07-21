@@ -41,6 +41,7 @@
             <el-table-column align="center" width="130" prop="author" label="作者" sortable="custom"></el-table-column>
             <el-table-column align="center" width="130" prop="editor" label="编辑" sortable="custom"></el-table-column>
             <el-table-column align="center" width="100" prop="wordCount" label="字数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="100" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
             <el-table-column align="center" width="100" prop="scoreId" label="等级"></el-table-column>
             <el-table-column align="center" width="100" prop="score" label="分数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="500" prop="remark" label="备注"></el-table-column>
