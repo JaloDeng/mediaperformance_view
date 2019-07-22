@@ -125,7 +125,7 @@
           </el-col>
         </el-row>
         <el-form-item label="等级分" label-width="120px">
-          <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :disabled="banEditScoreId">
+          <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :popper-append-to-body="false" class="select-uplift-height">
             <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -383,4 +383,7 @@ export default {
 </script>
 
 <style>
+  .select-uplift-height .el-select-dropdown__wrap {
+    max-height: initial;
+  }
 </style>
