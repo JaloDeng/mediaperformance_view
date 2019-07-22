@@ -16,6 +16,8 @@
           <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
             @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
+          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
+          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP标题：
           <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           纸媒标题：
@@ -26,8 +28,6 @@
           <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini">
             <el-option v-for="item in selectIsScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 30px">
