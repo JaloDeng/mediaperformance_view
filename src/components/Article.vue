@@ -60,7 +60,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="dialogVisible" :before-close="cancelEdit" width="80%" center>
+    <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="outerDialogVisible" :before-close="cancelEdit" width="80%" center>
       <el-form :model="article" ref="saveForm">
         <el-row type="flex">
           <el-col :span="12">
@@ -179,7 +179,7 @@ export default {
       isDisabledEditArticle: true,
       banEditScoreId: false,
       dialogTitle: '',
-      dialogVisible: false,
+      outerDialogVisible: false,
       paperSearchTime: [],
       sizes: [100, 200, 500],
       searchParams: {
@@ -216,7 +216,7 @@ export default {
       }
     },
     cancelEdit () {
-      this.dialogVisible = false
+      this.outerDialogVisible = false
       this.emptyData()
       this.load()
     },
@@ -331,7 +331,7 @@ export default {
       _this.tableLoading = true
       this.putRequest('/article', _this.article).then(resp => {
         _this.tableLoading = false
-        _this.dialogVisible = false
+        _this.outerDialogVisible = false
         _this.emptyData()
         _this.load()
       })
@@ -346,7 +346,7 @@ export default {
     },
     showAddView () {
       this.dialogTitle = '添加'
-      this.dialogVisible = true
+      this.outerDialogVisible = true
       this.isDisabledEditArticle = false
       this.banEditScoreId = false
     },
@@ -362,7 +362,7 @@ export default {
       })
       _this.tableLoading = false
       _this.dialogTitle = '编辑详情'
-      _this.dialogVisible = true
+      _this.outerDialogVisible = true
     },
     tableSortChange (column) {
       var _this = this
