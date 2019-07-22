@@ -91,7 +91,7 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="作者" label-width="120px">
-              <el-input v-model="article.author" size="mini" placeholder="请输入作者" :readonly="isDisabledEditArticle"></el-input>
+              <el-input v-model="article.author" size="mini" placeholder="请输入作者"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
