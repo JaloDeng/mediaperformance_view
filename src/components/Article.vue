@@ -21,31 +21,31 @@
             @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 210px;">
           </el-date-picker>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
+          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
           <br><br>APP标题：
-          <el-input clearable style="width: 350px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
+          <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           纸媒标题：
-          <el-input clearable style="width: 350px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
+          <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
           作者：
-          <el-input clearable style="width: 180px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
+          <el-input clearable style="width: 160px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 30px">
         <div>
           <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}">
-            <el-table-column align="center" type="index" width="50" prop="no" label="序号"></el-table-column>
-            <el-table-column align="center" width="150" prop="paperPublishTime" label="纸媒发布时间" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="50" label="序号" type="index"></el-table-column>
+            <el-table-column align="center" width="120" prop="paperPublishTime" label="见报日期" sortable="custom"></el-table-column>
             <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
             <el-table-column align="center" width="350" prop="paperTitle" label="纸媒标题"></el-table-column>
             <el-table-column align="center" width="350" prop="appTitle" label="APP标题"></el-table-column>
-            <el-table-column align="center" width="130" prop="author" label="作者" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="130" prop="editor" label="编辑" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="100" prop="wordCount" label="字数" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="100" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="100" prop="scoreId" label="等级"></el-table-column>
-            <el-table-column align="center" width="100" prop="score" label="分数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="90" prop="author" label="作者" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="90" prop="editor" label="编辑" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="80" prop="wordCount" label="字数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="90" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="80" prop="scoreId" label="等级"></el-table-column>
+            <el-table-column align="center" width="80" prop="score" label="分数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="500" prop="remark" label="备注"></el-table-column>
-            <el-table-column align="center" width="120" fixed="right" label="操作">
+            <el-table-column align="center" width="150" label="操作" fixed="right">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="mini" type="primary">详情</el-button>
               </template>
