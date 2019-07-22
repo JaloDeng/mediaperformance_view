@@ -5,29 +5,29 @@
       <el-header>
         <div>
           类型：
-          <el-select v-model="searchParams.type" placeholder="请选择" @change="changeType" size="mini">
+          <el-select v-model="searchParams.type" placeholder="请选择" @change="changeType" size="mini" style="width: 150px;">
             <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          APP发布时间：
-          <el-date-picker v-model="appSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
-            @change="appSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
-          </el-date-picker>
-          纸媒发布日期：
-          <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
-            @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
-          </el-date-picker>
-          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
-          <br><br>APP标题：
-          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
-          纸媒标题：
-          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
-          作者：
-          <el-input clearable style="width: 200px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
           打分状态：
-          <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini">
+          <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini" style="width: 90px;">
             <el-option v-for="item in selectIsScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
+          APP时间：
+          <el-date-picker v-model="appSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.appStartTime" :end-placeholder="searchParams.appEndTime"
+            @change="appSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 210px;">
+          </el-date-picker>
+          见报日期：
+          <el-date-picker v-model="paperSearchTime" type="daterange" range-separator="-" :start-placeholder="searchParams.paperStartTime" :end-placeholder="searchParams.paperEndTime"
+            @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 210px;">
+          </el-date-picker>
+          <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button>
+          <br><br>APP标题：
+          <el-input clearable style="width: 350px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
+          纸媒标题：
+          <el-input clearable style="width: 350px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
+          作者：
+          <el-input clearable style="width: 180px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 30px">
@@ -45,13 +45,13 @@
             <el-table-column align="center" width="100" prop="scoreId" label="等级"></el-table-column>
             <el-table-column align="center" width="100" prop="score" label="分数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="500" prop="remark" label="备注"></el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="160">
+            <el-table-column align="center" width="120" fixed="right" label="操作">
               <template slot-scope="scope">
-                <el-button @click="showEditView(scope.row)" size="small" type="primary">详情</el-button>
-                <el-button @click="del(scope.row)" hidden="hidden" size="small" type="danger">删除</el-button>
+                <el-button @click="showEditView(scope.row)" size="mini" type="primary">详情</el-button>
               </template>
             </el-table-column>
           </el-table>
+
           <br />
           <div style="justify-content:space-between;">
             <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum"
@@ -232,7 +232,7 @@ export default {
     currentTime () {
       var _this = this
       var now = new Date()
-      var preDate = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      var preDate = new Date(now.getTime() - 48 * 60 * 60 * 1000)
       var preDateStr = new Date(Date.UTC(preDate.getFullYear(), preDate.getMonth(), preDate.getDate())).toISOString().slice(0, 10)
       var type = _this.searchParams.type
       if (!type || type === 1 || type === 2) {
