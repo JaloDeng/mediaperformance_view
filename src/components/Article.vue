@@ -48,6 +48,7 @@
             <el-table-column align="center" width="150" label="操作" fixed="right">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="mini" type="primary">详情</el-button>
+                <el-button @click="del(scope.row)" size="mini" type="danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -61,11 +62,18 @@
       </el-main>
     </el-container>
     <el-dialog :title="dialogTitle" :close-on-click-modal="false" :visible.sync="outerDialogVisible" :before-close="cancelEdit" width="80%" center>
+      <el-dialog width="30%" title="新闻预览" :visible.sync="innerNewPreviewVisible" append-to-body center>
+        <el-row type="flex">
+          <el-col :span="24">
+            <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
+          </el-col>
+        </el-row>
+      </el-dialog>
       <el-form :model="article" ref="saveForm">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="类别"  label-width="120px">
-              <el-select v-model="article.type" placeholder="请选择" size="mini">
+              <el-select v-model="article.type" placeholder="请选择" size="mini" class="input_width">
                 <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value" :disabled="isDisabledEditArticle"></el-option>
               </el-select>
             </el-form-item>
@@ -103,42 +111,49 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="纸媒发布时间" label-width="120px">
-              <el-date-picker v-model="article.paperPublishTime" type="date" size="mini" placeholder="选择日期" value-format="yyyy-MM-dd" :readonly="isDisabledEditArticle"></el-date-picker>
+              <el-date-picker v-model="article.paperPublishTime" type="date" size="mini" placeholder="选择日期" value-format="yyyy-MM-dd"
+                :readonly="isDisabledEditArticle" style="width: 200px;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="APP发布时间" label-width="120px">
-              <el-date-picker v-model="article.appPublishTime" type="datetime" size="mini" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" :readonly="isDisabledEditArticle"></el-date-picker>
+              <el-date-picker v-model="article.appPublishTime" type="datetime" size="mini" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"
+                :readonly="isDisabledEditArticle" style="width: 200px;"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="字数" label-width="120px">
-              <el-input-number v-model="article.wordCount" :min="0" size="mini" :disabled="isDisabledEditArticle"></el-input-number>
+              <el-input type="number" v-model="article.wordCount" :min="0" size="mini" :readonly="isDisabledEditArticle" class="input_width"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="浏览量" label-width="120px">
-              <el-input-number v-model="article.clickCount" size="mini" :disabled="isDisabledEditArticle"></el-input-number>
+              <el-input type="number" v-model="article.clickCount" size="mini" :readonly="isDisabledEditArticle" class="input_width"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="等级分" label-width="120px">
-          <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :popper-append-to-body="false" class="select-uplift-height">
-            <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="等级分" label-width="120px">
+              <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :popper-append-to-body="false" class="select-uplift-height input_width" @change="changeEditScoreId">
+                <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="分数" label-width="120px">
+              <el-input type="number" v-model="article.score" size="mini" :readonly="banEditScore" class="input_width"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注" label-width="120px">
           <el-input v-model="article.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
-      <el-row type="flex">
-        <el-col :span="24">
-          <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
-        </el-col>
-      </el-row>
       <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="warning" @click="innerNewPreviewVisible = true">预览</el-button>
         <el-button size="mini" type="primary" @click="save('saveForm')">确认</el-button>
         <el-button size="mini" @click="cancelEdit">取消</el-button>
       </span>
@@ -176,8 +191,10 @@ export default {
         updateUser: '',
         updateTime: ''
       },
+      innerNewPreviewVisible: false,
       isDisabledEditArticle: true,
       banEditScoreId: false,
+      banEditScore: true,
       dialogTitle: '',
       outerDialogVisible: false,
       paperSearchTime: [],
@@ -219,6 +236,23 @@ export default {
       this.outerDialogVisible = false
       this.emptyData()
       this.load()
+    },
+    changeEditScoreId (scoreId) {
+      var _this = this
+      if (scoreId === '手动打分') {
+        _this.banEditScore = false
+        _this.article.score = ''
+      } else {
+        _this.banEditScore = true
+        var scores = _this.selectScore
+        for (let x = 0; x < scores.length; x++) {
+          const element = scores[x]
+          if (element.value === scoreId) {
+            _this.article.score = element.score
+            break
+          }
+        }
+      }
     },
     changeType () {
       this.currentTime()
@@ -300,7 +334,8 @@ export default {
             }
             var item = {
               'label': sid + ' ' + sscore,
-              'value': sid
+              'value': sid,
+              'score': sscore
             }
             this.selectScore.push(item)
           }
@@ -329,6 +364,10 @@ export default {
     save (formName) {
       var _this = this
       _this.tableLoading = true
+      if (_this.article.scoreId === '手动打分' && _this.article.score === '') {
+        this.$message('手动打分时请输入分数')
+        return
+      }
       this.putRequest('/article', _this.article).then(resp => {
         _this.tableLoading = false
         _this.outerDialogVisible = false
@@ -385,5 +424,8 @@ export default {
 <style>
   .select-uplift-height .el-select-dropdown__wrap {
     max-height: initial;
+  }
+  .input_width {
+    width: 200px;
   }
 </style>
