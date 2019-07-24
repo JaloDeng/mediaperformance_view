@@ -137,14 +137,14 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="等级分" label-width="120px">
-              <el-select v-model="article.scoreId" placeholder="请选择" size="mini" :popper-append-to-body="false" class="select-uplift-height input_width" @change="changeEditScoreId">
+              <el-select v-model="articleScoreRecord.scoreId" placeholder="请选择" size="mini" :popper-append-to-body="false" class="select-uplift-height input_width" @change="changeEditScoreId">
                 <el-option v-for="item in selectScore" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="分数" label-width="120px">
-              <el-input type="number" v-model="article.score" size="mini" :readonly="banEditScore" class="input_width"></el-input>
+              <el-input type="number" v-model="articleScoreRecord.score" size="mini" :readonly="banEditScore" class="input_width"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -174,7 +174,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="备注" label-width="120px">
-              <el-input v-model="article.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
+              <el-input v-model="articleScoreRecord.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -210,19 +210,11 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
-        scoreId: '',
-        score: '',
-        remark: '',
         createUser: '',
         createTime: '',
         updateUser: '',
         updateTime: '',
-        articleScoreRecord: {
-          id: '',
-          scoreId: '',
-          score: '',
-          remark: ''
-        },
+        articleScoreRecord: {},
         articleScoreRecordAuthors: []
       },
       articleScoreRecord: {
@@ -288,15 +280,13 @@ export default {
       var _this = this
       if (scoreId === '手动打分') {
         _this.banEditScore = false
-        _this.article.articleScoreRecord.score = ''
-        _this.article.score = ''
+        _this.articleScoreRecord.score = ''
       } else {
         var scores = _this.selectScore
         for (let x = 0; x < scores.length; x++) {
           const element = scores[x]
           if (element.value === scoreId) {
-            _this.article.articleScoreRecord.score = element.score
-            _this.article.score = element.score
+            _this.articleScoreRecord.score = element.score
             break
           }
         }
@@ -362,20 +352,18 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
-        scoreId: '',
-        score: '',
-        remark: '',
         createUser: '',
         createTime: '',
         updateUser: '',
         updateTime: '',
-        articleScoreRecord: {
-          id: '',
-          scoreId: '',
-          score: '',
-          remark: ''
-        },
+        articleScoreRecord: {},
         articleScoreRecordAuthors: []
+      }
+      this.articleScoreRecord = {
+        id: '',
+        scoreId: '',
+        score: '',
+        remark: ''
       }
       this.isDisabledEditArticle = true
       this.banEditScoreId = false
@@ -439,13 +427,11 @@ export default {
     save (formName) {
       var _this = this
       _this.tableLoading = true
-      if (_this.article.scoreId === '手动打分' && _this.article.score === '') {
+      if (_this.articleScoreRecord.scoreId === '手动打分' && _this.articleScoreRecord.score === '') {
         this.$message('手动打分时请输入分数')
         return
       }
-      _this.article.articleScoreRecord.scoreId = _this.article.scoreId
-      _this.article.articleScoreRecord.score = _this.article.score
-      _this.article.articleScoreRecord.remark = _this.article.remark
+      _this.article.articleScoreRecord = _this.articleScoreRecord
       if (!this.isAuthorPercentSum100()) {
         this.$message('请输入正确的分数占比')
         return
@@ -478,14 +464,10 @@ export default {
       this.getRequest('/article/' + row.id).then(resp => {
         _this.article = resp.data.data
         if (_this.article.articleScoreRecord) {
-          _this.article.scoreId = _this.article.articleScoreRecord.scoreId
-          _this.article.score = _this.article.articleScoreRecord.score
-          _this.article.remark = _this.article.articleScoreRecord.remark
-          if (_this.article.scoreId && _this.article.scoreId !== '') {
+          _this.articleScoreRecord = _this.article.articleScoreRecord
+          if (_this.articleScoreRecord.scoreId && _this.articleScoreRecord.scoreId !== '') {
             this.banEditScoreId = true
           }
-        } else {
-          _this.article.articleScoreRecord = _this.articleScoreRecord
         }
       })
       _this.tableLoading = false
