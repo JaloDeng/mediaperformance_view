@@ -42,9 +42,9 @@
             <el-table-column align="center" width="90" prop="editor" label="编辑" sortable="custom"></el-table-column>
             <el-table-column align="center" width="80" prop="wordCount" label="字数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="90" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="80" prop="scoreId" label="等级"></el-table-column>
-            <el-table-column align="center" width="80" prop="score" label="分数" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="500" prop="remark" label="备注"></el-table-column>
+            <el-table-column align="center" width="80" prop="articleScoreRecord.scoreId" label="等级"></el-table-column>
+            <el-table-column align="center" width="80" prop="articleScoreRecord.score" label="分数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="500" prop="articleScoreRecord.remark" label="备注"></el-table-column>
             <el-table-column align="center" width="150" label="操作" fixed="right">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="mini" type="primary">详情</el-button>
@@ -148,9 +148,36 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="备注" label-width="120px">
-          <el-input v-model="article.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
-        </el-form-item>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="分数占比" label-width="120px">
+              <el-button size="mini" type="primary" @click="addScoreRecordAuthorRow(article.articleScoreRecordAuthors)">添加</el-button>
+              <el-table :data="article.articleScoreRecordAuthors" size="mini" border>
+                <el-table-column align="center" width="50" label="序号" type="index"></el-table-column>
+                <el-table-column align="center" prop="author" label="作者">
+                  <template slot-scope="scope">
+                    <el-input size="mini" v-model="scope.row.author"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="percent" label="占比(%)">
+                  <template slot-scope="scope">
+                    <el-input style="width: 50%" size="mini" v-model="scope.row.percent" max="100" min="0"></el-input> %
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" width="150" label="操作" fixed="right">
+                  <template slot-scope="scope">
+                    <el-button @click.native.prevent="delScoreRecordAuthorRow(scope.$index, article.articleScoreRecordAuthors)" size="mini" type="danger">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" label-width="120px">
+              <el-input v-model="article.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="warning" @click="innerNewPreviewVisible = true">预览</el-button>
@@ -183,13 +210,26 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
-        remark: '',
         scoreId: '',
         score: '',
+        remark: '',
         createUser: '',
         createTime: '',
         updateUser: '',
-        updateTime: ''
+        updateTime: '',
+        articleScoreRecord: {
+          id: '',
+          scoreId: '',
+          score: '',
+          remark: ''
+        },
+        articleScoreRecordAuthors: []
+      },
+      articleScoreRecord: {
+        id: '',
+        scoreId: '',
+        score: '',
+        remark: ''
       },
       innerNewPreviewVisible: false,
       isDisabledEditArticle: true,
@@ -222,6 +262,13 @@ export default {
     }
   },
   methods: {
+    addScoreRecordAuthorRow (tableData, event) {
+      tableData.push({
+        id: '',
+        author: '',
+        percent: 0
+      })
+    },
     appSearchTimeChange () {
       var _this = this
       if (_this.appSearchTime && _this.appSearchTime.length > 0) {
@@ -241,17 +288,19 @@ export default {
       var _this = this
       if (scoreId === '手动打分') {
         _this.banEditScore = false
+        _this.article.articleScoreRecord.score = ''
         _this.article.score = ''
       } else {
-        _this.banEditScore = true
         var scores = _this.selectScore
         for (let x = 0; x < scores.length; x++) {
           const element = scores[x]
           if (element.value === scoreId) {
+            _this.article.articleScoreRecord.score = element.score
             _this.article.score = element.score
             break
           }
         }
+        _this.banEditScore = true
       }
     },
     changeType () {
@@ -285,14 +334,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.deleteRequest('/article/' + row.id).then(resp => {
-        //   if (resp && resp.status === 200 && resp.data.success) {
-        //     this.load()
-        //   }
-        // })
-        this.$message('功能暂未开放')
+        this.deleteRequest('/article/' + row.id).then(resp => {
+          if (resp && resp.status === 200 && resp.data.success) {
+            this.load()
+          }
+        })
       }).catch(() => {
       })
+    },
+    delScoreRecordAuthorRow (index, rows) {
+      rows.splice(index, 1)
     },
     emptyData () {
       this.article = {
@@ -311,13 +362,20 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
-        remark: '',
         scoreId: '',
         score: '',
+        remark: '',
         createUser: '',
         createTime: '',
         updateUser: '',
-        updateTime: ''
+        updateTime: '',
+        articleScoreRecord: {
+          id: '',
+          scoreId: '',
+          score: '',
+          remark: ''
+        },
+        articleScoreRecordAuthors: []
       }
       this.isDisabledEditArticle = true
       this.banEditScoreId = false
@@ -341,6 +399,23 @@ export default {
           }
         }
       })
+    },
+    isAuthorPercentSum100 () {
+      var _this = this
+      var articleScoreRecordAuthors = _this.article.articleScoreRecordAuthors
+      var num = 0.0
+      if (articleScoreRecordAuthors.length === 0) {
+        return true
+      }
+      for (let x = 0; x < articleScoreRecordAuthors.length; x++) {
+        const articleScoreRecordAuthor = articleScoreRecordAuthors[x]
+        num = num + parseFloat(articleScoreRecordAuthor.percent)
+      }
+      if (num === 100.0) {
+        return true
+      } else {
+        return false
+      }
     },
     load () {
       var _this = this
@@ -366,6 +441,13 @@ export default {
       _this.tableLoading = true
       if (_this.article.scoreId === '手动打分' && _this.article.score === '') {
         this.$message('手动打分时请输入分数')
+        return
+      }
+      _this.article.articleScoreRecord.scoreId = _this.article.scoreId
+      _this.article.articleScoreRecord.score = _this.article.score
+      _this.article.articleScoreRecord.remark = _this.article.remark
+      if (!this.isAuthorPercentSum100()) {
+        this.$message('请输入正确的分数占比')
         return
       }
       this.putRequest('/article', _this.article).then(resp => {
@@ -395,8 +477,15 @@ export default {
       this.isDisabledEditArticle = true
       this.getRequest('/article/' + row.id).then(resp => {
         _this.article = resp.data.data
-        if (_this.article.scoreId && _this.article.scoreId !== '') {
-          this.banEditScoreId = true
+        if (_this.article.articleScoreRecord) {
+          _this.article.scoreId = _this.article.articleScoreRecord.scoreId
+          _this.article.score = _this.article.articleScoreRecord.score
+          _this.article.remark = _this.article.articleScoreRecord.remark
+          if (_this.article.scoreId && _this.article.scoreId !== '') {
+            this.banEditScoreId = true
+          }
+        } else {
+          _this.article.articleScoreRecord = _this.articleScoreRecord
         }
       })
       _this.tableLoading = false
