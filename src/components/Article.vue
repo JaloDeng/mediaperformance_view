@@ -21,7 +21,7 @@
             @change="paperSearchTimeChange" size="mini" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 210px;">
           </el-date-picker>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
-          <!-- <el-button type="primary" size="mini" icon="el-icon-plus" @click="showAddView">添加</el-button> -->
+          <el-button type="success" size="mini" icon="el-icon-download" @click="exportExcel">导出</el-button>
           <br><br>APP标题：
           <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           纸媒标题：
@@ -367,6 +367,14 @@ export default {
       }
       this.isDisabledEditArticle = true
       this.banEditScoreId = false
+    },
+    exportExcel () {
+      var _this = this
+      var url = '/article/export/excel?'
+      for (var i in _this.searchParams) {
+        url = url + i + '=' + _this.searchParams[i] + '&'
+      }
+      window.open(url)
     },
     getScoreData () {
       this.getRequest('/article/score').then(resp => {
