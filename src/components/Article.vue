@@ -43,7 +43,8 @@
             <el-table-column align="center" width="80" prop="wordCount" label="字数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="90" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
             <el-table-column align="center" width="80" prop="articleScoreRecord.scoreId" label="等级"></el-table-column>
-            <el-table-column align="center" width="80" prop="articleScoreRecord.score" label="分数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="100" prop="articleScoreRecord.score" label="文章分数" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="100" prop="authorScore" label="作者分数"></el-table-column>
             <el-table-column align="center" width="500" prop="articleScoreRecord.remark" label="备注"></el-table-column>
             <el-table-column align="center" width="150" label="操作" fixed="right">
               <template slot-scope="scope">
@@ -164,6 +165,7 @@
                     <el-input style="width: 50%" size="mini" v-model="scope.row.percent" max="100" min="0"></el-input> %
                   </template>
                 </el-table-column>
+                <el-table-column align="center" label="分数" :formatter="formatAuthorScore"></el-table-column>
                 <el-table-column align="center" width="150" label="操作" fixed="right">
                   <template slot-scope="scope">
                     <el-button @click.native.prevent="delScoreRecordAuthorRow(scope.$index, article.articleScoreRecordAuthors)" size="mini" type="danger">删除</el-button>
@@ -210,6 +212,7 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
+        authorScore: '',
         createUser: '',
         createTime: '',
         updateUser: '',
@@ -352,6 +355,7 @@ export default {
         editor: '',
         wordCount: '',
         url: '',
+        authorScore: '',
         createUser: '',
         createTime: '',
         updateUser: '',
@@ -375,6 +379,14 @@ export default {
         url = url + i + '=' + _this.searchParams[i] + '&'
       }
       window.open(url)
+    },
+    formatAuthorScore (row, column, cellValue, index) {
+      var _this = this
+      if (row.percent && _this.articleScoreRecord.score) {
+        var score = parseFloat(row.percent) * parseFloat(_this.articleScoreRecord.score) * 0.01
+        return score
+      }
+      return ''
     },
     getScoreData () {
       this.getRequest('/article/score').then(resp => {
