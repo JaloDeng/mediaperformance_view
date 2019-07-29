@@ -5,8 +5,8 @@
       <el-header>
         <div>
           类型：
-          <el-select v-model="searchParams.type" placeholder="请选择" @change="changeType" size="mini" style="width: 150px;">
-            <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="searchParams.exportType" placeholder="请选择" @change="changeExportType" size="mini" style="width: 150px;">
+            <el-option v-for="item in selectExportType" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
           打分状态：
           <el-select v-model="searchParams.isScore" placeholder="请选择" @change="search" size="mini" style="width: 90px;">
@@ -80,8 +80,8 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="类别"  label-width="120px">
-              <el-select v-model="article.type" placeholder="请选择" size="mini" class="input_width">
-                <el-option v-for="item in selectType" :key="item.value" :label="item.label" :value="item.value" :disabled="isDisabledEditArticle"></el-option>
+              <el-select v-model="article.exportType" placeholder="请选择" size="mini" class="input_width">
+                <el-option v-for="item in selectExportType" :key="item.value" :label="item.label" :value="item.value" :disabled="isDisabledEditArticle"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -213,7 +213,7 @@ export default {
       articles: [],
       article: {
         id: '',
-        type: '',
+        exportType: '',
         newsType: '',
         newsSourceId: '',
         newsTransferId: '',
@@ -250,7 +250,7 @@ export default {
       paperSearchTime: [],
       sizes: [100, 200, 500],
       searchParams: {
-        type: 1,
+        exportType: 'APP',
         newsType: '',
         paperStartTime: '',
         paperEndTime: '',
@@ -268,7 +268,7 @@ export default {
       selectIsScore: [{value: '', label: '全部'}, {value: -1, label: '未打分'}, {value: 1, label: '已打分'}],
       selectNewsType: [],
       selectScore: [],
-      selectType: [{label: '只发APP', value: 1}, {label: '先发APP再发纸媒', value: 2}, {label: '先发纸媒再发APP', value: 3}, {label: '只发报纸', value: 4}],
+      selectExportType: [],
       tableLoading: false,
       total: 1
     }
@@ -313,7 +313,7 @@ export default {
         _this.banEditScore = true
       }
     },
-    changeType () {
+    changeExportType () {
       this.currentTime()
       this.searchParams.pageNum = 1
       this.load()
@@ -327,8 +327,8 @@ export default {
       var now = new Date()
       var preDate = new Date(now.getTime() - 48 * 60 * 60 * 1000)
       var preDateStr = new Date(Date.UTC(preDate.getFullYear(), preDate.getMonth(), preDate.getDate())).toISOString().slice(0, 10)
-      var type = _this.searchParams.type
-      if (!type || type === 1 || type === 2) {
+      var exportType = _this.searchParams.exportType
+      if (!exportType || exportType === 'APP' || exportType === 'APPTOPAPER') {
         _this.appSearchTime = [preDateStr + ' 00:00:00', preDateStr + ' 23:59:59']
         _this.paperSearchTime = []
       } else {
@@ -358,7 +358,7 @@ export default {
     emptyData () {
       this.article = {
         id: '',
-        type: '',
+        exportType: '',
         newsType: '',
         newsSourceId: '',
         newsTransferId: '',
@@ -405,6 +405,13 @@ export default {
         return score
       }
       return ''
+    },
+    getExportType () {
+      this.getRequest('/article/exportType').then(resp => {
+        if (resp.data && resp.data.data) {
+          this.selectExportType = resp.data.data
+        }
+      })
     },
     getNewsType () {
       this.getRequest('/article/newsType').then(resp => {
@@ -532,6 +539,7 @@ export default {
   mounted: function () {
     this.currentTime()
     this.load()
+    this.getExportType()
     this.getScore()
     this.getNewsType()
   }
