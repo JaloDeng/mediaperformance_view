@@ -22,7 +22,12 @@
           </el-date-picker>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
           <el-button type="success" size="mini" icon="el-icon-download" @click="exportExcel">导出</el-button>
-          <br><br>APP标题：
+          <br><br>
+          文章类型：
+          <el-select v-model="searchParams.newsType" clearable placeholder="请选择" @change="search" size="mini" style="width: 100px;">
+            <el-option v-for="item in selectNewsType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          APP标题：
           <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.appTitle"></el-input>
           纸媒标题：
           <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
@@ -36,6 +41,7 @@
             <el-table-column align="center" width="50" label="序号" type="index"></el-table-column>
             <el-table-column align="center" width="120" prop="paperPublishTime" label="见报日期" sortable="custom"></el-table-column>
             <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
+            <el-table-column align="center" width="100" prop="newsTypeLabel" label="文章类型"></el-table-column>
             <el-table-column align="center" width="350" prop="paperTitle" label="纸媒标题"></el-table-column>
             <el-table-column align="center" width="350" prop="appTitle" label="APP标题"></el-table-column>
             <el-table-column align="center" width="90" prop="author" label="作者" sortable="custom"></el-table-column>
@@ -80,8 +86,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="链接" label-width="120px">
-              <el-input v-model="article.url" size="mini" placeholder="请输入链接" :readonly="isDisabledEditArticle"></el-input>
+            <el-form-item label="文章类型"  label-width="120px">
+              <el-select v-model="article.newsType" placeholder="请选择" size="mini" class="input_width">
+                <el-option v-for="item in selectNewsType" :key="item.value" :label="item.label" :value="item.value" :disabled="isDisabledEditArticle"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -132,6 +140,13 @@
           <el-col :span="12">
             <el-form-item label="浏览量" label-width="120px">
               <el-input type="number" v-model="article.clickCount" size="mini" :readonly="isDisabledEditArticle" class="input_width"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item label="链接" label-width="120px">
+              <el-input v-model="article.url" size="mini" placeholder="请输入链接" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -236,6 +251,7 @@ export default {
       sizes: [100, 200, 500],
       searchParams: {
         type: 1,
+        newsType: '',
         paperStartTime: '',
         paperEndTime: '',
         appStartTime: '',
@@ -250,6 +266,7 @@ export default {
         orderBy: ''
       },
       selectIsScore: [{value: '', label: '全部'}, {value: -1, label: '未打分'}, {value: 1, label: '已打分'}],
+      selectNewsType: [],
       selectScore: [],
       selectType: [{label: '只发APP', value: 1}, {label: '先发APP再发纸媒', value: 2}, {label: '先发纸媒再发APP', value: 3}, {label: '只发报纸', value: 4}],
       tableLoading: false,
@@ -375,6 +392,7 @@ export default {
     exportExcel () {
       var _this = this
       var url = '/article/export/excel?'
+      // url = 'http://localhost:8085/article/export/excel?'
       for (var i in _this.searchParams) {
         url = url + i + '=' + _this.searchParams[i] + '&'
       }
@@ -388,7 +406,14 @@ export default {
       }
       return ''
     },
-    getScoreData () {
+    getNewsType () {
+      this.getRequest('/article/newsType').then(resp => {
+        if (resp.data && resp.data.data) {
+          this.selectNewsType = resp.data.data
+        }
+      })
+    },
+    getScore () {
       this.getRequest('/article/score').then(resp => {
         if (resp.data && resp.data.data) {
           var scores = resp.data.data
@@ -507,7 +532,8 @@ export default {
   mounted: function () {
     this.currentTime()
     this.load()
-    this.getScoreData()
+    this.getScore()
+    this.getNewsType()
   }
 }
 </script>
