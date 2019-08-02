@@ -93,7 +93,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-          <el-row type="flex">
+        <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="纸媒标题" label-width="120px">
               <el-input v-model="article.paperTitle" size="mini" placeholder="请输入纸媒标题" :readonly="isDisabledEditArticle"></el-input>
