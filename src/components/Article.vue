@@ -55,11 +55,10 @@
             <el-table-column align="center" width="150" label="操作" fixed="right">
               <template slot-scope="scope">
                 <el-button @click="showEditView(scope.row)" size="mini" type="primary">详情</el-button>
-                <el-button @click="del(scope.row)" size="mini" type="danger">删除</el-button>
+                <el-button :disabled="scope.row.canDelete" @click="del(scope.row)" size="mini" type="danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
-
           <br />
           <div style="justify-content:space-between;">
             <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum"
