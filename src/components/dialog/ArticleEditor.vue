@@ -1,13 +1,7 @@
 <template>
   <div>
     <el-dialog :title="'编辑'" :close-on-click-modal="false" :visible.sync="outerDialogVisible" :before-close="closeEdit" width="80%" center>
-      <el-dialog width="30%" title="新闻预览" :visible.sync="innerNewPreviewVisible" append-to-body center>
-        <el-row type="flex">
-          <el-col :span="24">
-            <iframe :src="article.url" frameborder="0" width="100%" height="500px"></iframe>
-          </el-col>
-        </el-row>
-      </el-dialog>
+      <newsPreview :dialogVisible="innerNewPreviewVisible" :url="article.url" v-on:closeNewsPreview="closeNewsPreview"></newsPreview>
       <el-form :model="article" ref="saveForm">
         <el-row type="flex">
           <el-col :span="12">
@@ -139,7 +133,12 @@
 </template>
 
 <script>
+import newsPreview from '@/components/dialog/NewsPreview'
+
 export default {
+  components: {
+    newsPreview
+  },
   data () {
     return {
       banEditScore: true,
@@ -164,6 +163,9 @@ export default {
     },
     closeEdit () {
       this.$emit('closeEdit')
+    },
+    closeNewsPreview () {
+      this.innerNewPreviewVisible = false
     },
     changeEditScoreId (scoreId) {
       if (scoreId === '手动打分') {
