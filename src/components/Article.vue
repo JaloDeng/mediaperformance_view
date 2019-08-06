@@ -89,6 +89,7 @@ export default {
         newsType: '',
         newsSourceId: '',
         newsTransferId: '',
+        newsTransferIds: '',
         paperPublishTime: '',
         appPublishTime: '',
         pageName: '',
@@ -201,6 +202,7 @@ export default {
         newsType: '',
         newsSourceId: '',
         newsTransferId: '',
+        newsTransferIds: '',
         paperPublishTime: '',
         appPublishTime: '',
         pageName: '',
@@ -295,7 +297,6 @@ export default {
       this.searchParams.pageSize = sizeChange
       this.load()
     },
-    showAddView () {},
     showEditView (row) {
       var _this = this
       this.tableLoading = true

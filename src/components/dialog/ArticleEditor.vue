@@ -124,23 +124,57 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" type="warning" @click="innerNewPreviewVisible = true">预览</el-button>
-        <el-button size="mini" type="success">添加</el-button>
-        <el-button size="mini" type="primary" @click="save('saveForm')">确认</el-button>
+        <el-button size="mini" type="success" @click="showAddView()">添加素材</el-button>
+        <el-button size="mini" type="primary" @click="save('saveForm')">保存</el-button>
         <el-button size="mini" @click="closeEdit">取消</el-button>
       </span>
     </el-dialog>
+    <articleAdd :article="newArticle" :dialogVisible="addVisible" :selectNewsType="selectNewsType" :selectScore="selectScore" v-on:closeAddView="closeAddView"></articleAdd>
   </div>
 </template>
 
 <script>
 import newsPreview from '@/components/dialog/NewsPreview'
+import articleAdd from '@/components/dialog/ArticleAdd'
 
 export default {
   components: {
-    newsPreview
+    newsPreview,
+    articleAdd
   },
   data () {
     return {
+      newArticle: {
+        id: '',
+        exportType: '',
+        newsType: '',
+        newsSourceId: '',
+        newsTransferId: '',
+        newsTransferIds: '',
+        paperPublishTime: '',
+        appPublishTime: '',
+        pageName: '',
+        category: '',
+        paperTitle: '',
+        appTitle: '',
+        author: '',
+        editor: '',
+        wordCount: '',
+        url: '',
+        authorScore: '',
+        createUser: '',
+        createTime: '',
+        updateUser: '',
+        updateTime: '',
+        articleScoreRecord: {
+          id: '',
+          scoreId: '',
+          score: '',
+          remark: ''
+        },
+        selectNewsTransferId: []
+      },
+      addVisible: false,
       banEditScore: true,
       innerNewPreviewVisible: false,
       isDisabledEditArticle: true
@@ -160,6 +194,10 @@ export default {
         author: '',
         percent: 0
       })
+    },
+    closeAddView () {
+      this.addVisible = false
+      this.emptyNewArticle()
     },
     closeEdit () {
       this.$emit('closeEdit')
@@ -181,6 +219,38 @@ export default {
           }
         }
         this.banEditScore = true
+      }
+    },
+    emptyNewArticle () {
+      this.newArticle = {
+        id: '',
+        exportType: '',
+        newsType: '',
+        newsSourceId: '',
+        newsTransferId: '',
+        newsTransferIds: '',
+        paperPublishTime: '',
+        appPublishTime: '',
+        pageName: '',
+        category: '',
+        paperTitle: '',
+        appTitle: '',
+        author: '',
+        editor: '',
+        wordCount: '',
+        url: '',
+        authorScore: '',
+        createUser: '',
+        createTime: '',
+        updateUser: '',
+        updateTime: '',
+        articleScoreRecord: {
+          id: '',
+          scoreId: '',
+          score: '',
+          remark: ''
+        },
+        selectNewsTransferId: []
       }
     },
     delScoreRecordAuthorRow (index, rows) {
@@ -223,6 +293,30 @@ export default {
       this.putRequest('/article', _this.article).then(resp => {
         this.closeEdit()
       })
+    },
+    showAddView () {
+      this.emptyNewArticle()
+      this.newArticle.exportType = this.article.exportType
+      this.newArticle.newsSourceId = this.article.newsSourceId
+      this.newArticle.paperPublishTime = this.article.paperPublishTime
+      this.newArticle.appPublishTime = this.article.appPublishTime
+      this.newArticle.pageName = this.article.pageName
+      this.newArticle.category = this.article.category
+      this.newArticle.paperTitle = this.article.paperTitle
+      this.newArticle.appTitle = this.article.appTitle
+      this.newArticle.editor = this.article.editor
+      this.newArticle.wordCount = 0
+      if (this.article.newsTransferIds && this.article.newsTransferIds !== '') {
+        var newsTransferIds = this.article.newsTransferIds.split(',')
+        for (let i = 0; i < newsTransferIds.length; i++) {
+          const element = newsTransferIds[i]
+          var selectItem = {label: element, value: element}
+          this.newArticle.selectNewsTransferId.push(selectItem)
+        }
+        this.addVisible = true
+      } else {
+        this.$message('该记录不能添加素材')
+      }
     }
   },
   mounted () {
