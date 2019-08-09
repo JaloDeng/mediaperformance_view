@@ -39,7 +39,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="编辑" label-width="120px">
-              <el-input v-model="article.editor" size="mini" placeholder="请输入编辑" :readonly="isDisabledEditArticle"></el-input>
+              <el-input v-model="article.editor" size="mini"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
