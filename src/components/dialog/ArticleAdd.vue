@@ -11,6 +11,11 @@
             </el-form-item>
           </el-row>
           <el-row type="flex">
+            <el-form-item label="图片数量" label-width="120px" :hidden="article.newsType === 'IMAGE' ? false : true">
+              <el-input v-model="article.articleScoreRecord.imageCount" size="mini" class="input_width"></el-input>
+            </el-form-item>
+          </el-row>
+          <el-row type="flex">
             <el-form-item label="作者" label-width="120px">
               <el-input v-model="article.author" size="mini" class="input_width"></el-input>
             </el-form-item>
