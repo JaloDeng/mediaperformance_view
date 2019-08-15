@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h2>新媒体绩效考核系统</h2>
     <el-container>
-      <el-header>
-        <div>
+      <el-main style="padding: 0px">
+        <template>
           类型：
           <el-select v-model="searchParams.exportType" placeholder="请选择" @change="changeExportType" size="mini" style="width: 150px;">
             <el-option v-for="item in selectExportType" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -22,7 +21,7 @@
           </el-date-picker>
           <el-button type="primary" size="mini" style="" icon="el-icon-search" @click="search">搜索</el-button>
           <el-button type="success" size="mini" icon="el-icon-download" @click="exportExcel">导出</el-button>
-          <br><br>
+          <br style="line-height: 30px;">
           文章类型：
           <el-select v-model="searchParams.newsType" clearable placeholder="请选择" @change="search" size="mini" style="width: 100px;">
             <el-option v-for="item in selectNewsType" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -33,11 +32,11 @@
           <el-input clearable style="width: 330px;" size="mini" @keyup.enter.native="search" v-model="searchParams.paperTitle"></el-input>
           作者：
           <el-input clearable style="width: 160px;" size="mini" @keyup.enter.native="search" v-model="searchParams.author"></el-input>
-        </div>
-      </el-header>
-      <el-main style="padding-left: 0px;padding-top: 30px">
-        <div>
-          <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}">
+          <br style="line-height: 30px;">
+        </template>
+        <template>
+          <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}"
+            height="400">
             <el-table-column align="center" width="50" label="序号" type="index"></el-table-column>
             <el-table-column align="center" width="120" prop="paperPublishTime" label="见报日期" sortable="custom"></el-table-column>
             <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
@@ -65,7 +64,7 @@
             <el-pagination background :page-sizes="sizes" :page-size="searchParams.pageSize" @size-change="sizeChange" :current-page="searchParams.pageNum"
               @current-change="currentChange" layout="sizes, prev, pager, next, jumper, ->, total" :total="total" style="text-align:center"></el-pagination>
           </div>
-        </div>
+        </template>
       </el-main>
     </el-container>
     <articleEditor :article="article" :outerDialogVisible="outerDialogVisible" :selectExportType="selectExportType"
@@ -74,7 +73,7 @@
 </template>
 
 <script>
-import articleEditor from '@/components/dialog/ArticleEditor'
+import articleEditor from '@/components/form/ArticleEditor'
 
 export default {
   components: {

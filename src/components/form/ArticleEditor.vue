@@ -139,8 +139,8 @@
 </template>
 
 <script>
-import newsPreview from '@/components/dialog/NewsPreview'
-import articleAdd from '@/components/dialog/ArticleAdd'
+import newsPreview from '@/components/other/NewsPreview'
+import articleAdd from '@/components/form/ArticleAdd'
 
 export default {
   components: {
