@@ -75,9 +75,9 @@
               <el-input v-model="article.url" size="mini" placeholder="请输入链接" :readonly="isDisabledEditArticle"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12" :hidden="article.newsType === 'IMAGE' ? false : true">
-            <el-form-item label="图片数量" label-width="120px">
-              <el-input type="number" v-model="article.articleScoreRecord.imageCount" size="mini" class="input_width"></el-input>
+          <el-col :span="12" :hidden="article.newsType === 'IMAGE' || article.newsType === 'AUDIOANDVIDEO' ? false : true">
+            <el-form-item label="素材数量" label-width="120px">
+              <el-input type="number" v-model="article.articleScoreRecord.sourceCount" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -177,7 +177,7 @@ export default {
           parentId: '',
           scoreId: '',
           score: '',
-          imageCount: '',
+          sourceCount: '',
           remark: ''
         }
       },
@@ -257,7 +257,7 @@ export default {
           parentId: '',
           scoreId: '',
           score: '',
-          imageCount: '',
+          sourceCount: '',
           remark: ''
         }
       }

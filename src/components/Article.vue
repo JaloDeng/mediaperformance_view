@@ -48,7 +48,7 @@
             <el-table-column align="center" width="90" prop="editor" label="编辑" sortable="custom"></el-table-column>
             <el-table-column align="center" width="80" prop="wordCount" label="字数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="90" prop="clickCount" label="浏览量" sortable="custom"></el-table-column>
-            <el-table-column align="center" width="100" prop="articleScoreRecord.imageCount" label="图片数量"></el-table-column>
+            <el-table-column align="center" width="100" prop="articleScoreRecord.sourceCount" label="素材数量"></el-table-column>
             <el-table-column align="center" width="80" prop="articleScoreRecord.scoreId" label="等级"></el-table-column>
             <el-table-column align="center" width="100" prop="articleScoreRecord.score" label="文章分数" sortable="custom"></el-table-column>
             <el-table-column align="center" width="100" prop="authorScore" label="作者分数"></el-table-column>
@@ -112,7 +112,7 @@ export default {
           parentId: '',
           scoreId: '',
           score: '',
-          imageCount: '',
+          sourceCount: '',
           remark: ''
         },
         articleScoreRecordAuthors: []
@@ -228,7 +228,7 @@ export default {
           parentId: '',
           scoreId: '',
           score: '',
-          imageCount: '',
+          sourceCount: '',
           remark: ''
         },
         articleScoreRecordAuthors: []

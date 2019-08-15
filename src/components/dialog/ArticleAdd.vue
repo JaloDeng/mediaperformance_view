@@ -11,8 +11,8 @@
             </el-form-item>
           </el-row>
           <el-row type="flex">
-            <el-form-item label="图片数量" label-width="120px" :hidden="article.newsType === 'IMAGE' ? false : true">
-              <el-input type="number" v-model="article.articleScoreRecord.imageCount" size="mini" class="input_width"></el-input>
+            <el-form-item label="素材数量" label-width="120px" :hidden="article.newsType === 'IMAGE' || article.newsType === 'AUDIOANDVIDEO' ? false : true">
+              <el-input type="number" v-model="article.articleScoreRecord.sourceCount" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-row>
           <el-row type="flex">
