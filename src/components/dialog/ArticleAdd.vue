@@ -12,19 +12,12 @@
           </el-row>
           <el-row type="flex">
             <el-form-item label="图片数量" label-width="120px" :hidden="article.newsType === 'IMAGE' ? false : true">
-              <el-input v-model="article.articleScoreRecord.imageCount" size="mini" class="input_width"></el-input>
+              <el-input type="number" v-model="article.articleScoreRecord.imageCount" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-row>
           <el-row type="flex">
             <el-form-item label="作者" label-width="120px">
               <el-input v-model="article.author" size="mini" class="input_width"></el-input>
-            </el-form-item>
-          </el-row>
-          <el-row type="flex">
-            <el-form-item label="素材" label-width="120px">
-              <el-select v-model="article.newsTransferId" placeholder="请选择" size="mini" class="input_width" @change="changeNewsTransferId">
-                <el-option v-for="item in article.selectNewsTransferId" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
             </el-form-item>
           </el-row>
           <el-row type="flex">
@@ -84,15 +77,8 @@ export default {
         this.banEditScore = true
       }
     },
-    changeNewsTransferId (newsTransferId) {
-      this.article.url = 'http://59.38.110.226:8086/ycAppService/preview.do?id=' + newsTransferId
-    },
     save () {
       var _this = this
-      if (!this.article.newsTransferId || this.article.newsTransferId === '') {
-        this.$message('请选择素材')
-        return
-      }
       this.putRequest('/article', _this.article).then(resp => {
         this.closeDialog()
       })

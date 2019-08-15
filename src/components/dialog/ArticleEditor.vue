@@ -151,6 +151,7 @@ export default {
     return {
       newArticle: {
         id: '',
+        parentId: '',
         exportType: '',
         newsType: '',
         newsSourceId: '',
@@ -173,12 +174,12 @@ export default {
         updateTime: '',
         articleScoreRecord: {
           id: '',
+          parentId: '',
           scoreId: '',
           score: '',
           imageCount: '',
           remark: ''
-        },
-        selectNewsTransferId: []
+        }
       },
       addVisible: false,
       banEditScore: true,
@@ -230,6 +231,7 @@ export default {
     emptyNewArticle () {
       this.newArticle = {
         id: '',
+        parentId: '',
         exportType: '',
         newsType: '',
         newsSourceId: '',
@@ -252,12 +254,12 @@ export default {
         updateTime: '',
         articleScoreRecord: {
           id: '',
+          parentId: '',
           scoreId: '',
           score: '',
           imageCount: '',
           remark: ''
-        },
-        selectNewsTransferId: []
+        }
       }
     },
     delScoreRecordAuthorRow (index, rows) {
@@ -303,30 +305,31 @@ export default {
     },
     showAddView () {
       this.emptyNewArticle()
-      this.newArticle.exportType = this.article.exportType
-      this.newArticle.newsSourceId = this.article.newsSourceId
-      this.newArticle.paperPublishTime = this.article.paperPublishTime
-      this.newArticle.appPublishTime = this.article.appPublishTime
-      this.newArticle.pageName = this.article.pageName
-      this.newArticle.category = this.article.category
-      this.newArticle.paperTitle = this.article.paperTitle
-      this.newArticle.appTitle = this.article.appTitle
-      this.newArticle.editor = this.article.editor
-      this.newArticle.wordCount = 0
-      if (this.article.newsTransferIds && this.article.newsTransferIds !== '') {
-        var newsTransferIds = this.article.newsTransferIds.split(',')
-        for (let i = 0; i < newsTransferIds.length; i++) {
-          const element = newsTransferIds[i]
-          var selectItem = {label: element, value: element}
-          this.newArticle.selectNewsTransferId.push(selectItem)
-        }
-        this.addVisible = true
+      if (this.article.parentId && this.article.parentId !== '' && this.article.parentId > 0) {
+        this.$message('该记录为稿件素材，请从主稿件记录添加')
+      } else if (!this.article.articleScoreRecord || this.article.articleScoreRecord.id === '') {
+        this.$message('请完成主稿件打分再添加稿件素材')
       } else {
-        this.$message('该记录不能添加素材')
+        this.newArticle.parentId = this.article.id
+        this.newArticle.exportType = this.article.exportType
+        this.newArticle.newsSourceId = this.article.newsSourceId
+        this.newArticle.newsTransferId = this.article.newsTransferId
+        this.newArticle.newsTransferIds = this.article.newsTransferIds
+        this.newArticle.paperPublishTime = this.article.paperPublishTime
+        this.newArticle.appPublishTime = this.article.appPublishTime
+        this.newArticle.pageName = this.article.pageName
+        this.newArticle.category = this.article.category
+        this.newArticle.paperTitle = this.article.paperTitle
+        this.newArticle.appTitle = this.article.appTitle
+        this.newArticle.editor = this.article.editor
+        this.newArticle.wordCount = 0
+        this.newArticle.url = this.article.url
+
+        this.newArticle.articleScoreRecord.parentId = this.article.articleScoreRecord.id
+
+        this.addVisible = true
       }
     }
-  },
-  mounted () {
   }
 }
 </script>

@@ -86,6 +86,7 @@ export default {
       articles: [],
       article: {
         id: '',
+        parentId: '',
         exportType: '',
         newsType: '',
         newsSourceId: '',
@@ -108,6 +109,7 @@ export default {
         updateTime: '',
         articleScoreRecord: {
           id: '',
+          parentId: '',
           scoreId: '',
           score: '',
           imageCount: '',
@@ -200,6 +202,7 @@ export default {
     emptyData () {
       this.article = {
         id: '',
+        parentId: '',
         exportType: '',
         newsType: '',
         newsSourceId: '',
@@ -222,6 +225,7 @@ export default {
         updateTime: '',
         articleScoreRecord: {
           id: '',
+          parentId: '',
           scoreId: '',
           score: '',
           imageCount: '',
