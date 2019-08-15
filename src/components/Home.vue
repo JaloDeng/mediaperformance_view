@@ -25,7 +25,7 @@ export default {
   },
   data () {
     return {
-      asideWidth: '64px',
+      asideWidth: '65px',
       collapseIcon: 'el-icon-s-unfold',
       isCollapse: true
     }
@@ -35,7 +35,7 @@ export default {
       this.isCollapse = !this.isCollapse
       if (this.isCollapse) {
         this.collapseIcon = 'el-icon-s-unfold'
-        this.asideWidth = '64px'
+        this.asideWidth = '65px'
       } else {
         this.collapseIcon = 'el-icon-s-fold'
         this.asideWidth = '250px'
