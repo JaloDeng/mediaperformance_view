@@ -35,8 +35,7 @@
           <br style="line-height: 30px;">
         </template>
         <template>
-          <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}"
-            height="400">
+          <el-table :data="articles" v-loading="tableLoading" size="mini" border @sort-change="tableSortChange" :default-sort="{prop: 'appPublishTime', order: 'descending'}">
             <el-table-column align="center" width="50" label="序号" type="index"></el-table-column>
             <el-table-column align="center" width="120" prop="paperPublishTime" label="见报日期" sortable="custom"></el-table-column>
             <el-table-column align="center" width="150" prop="appPublishTime" label="APP发布时间" sortable="custom"></el-table-column>
@@ -118,7 +117,7 @@ export default {
       },
       outerDialogVisible: false,
       paperSearchTime: [],
-      sizes: [100, 200, 500],
+      sizes: [50, 100, 200, 500],
       searchParams: {
         exportType: 'APP',
         newsType: '',
@@ -132,7 +131,7 @@ export default {
         isScore: '',
         scoreId: '',
         pageNum: 1,
-        pageSize: 100,
+        pageSize: 50,
         orderBy: ''
       },
       selectIsScore: [{value: '', label: '全部'}, {value: -1, label: '未打分'}, {value: 1, label: '已打分'}],
