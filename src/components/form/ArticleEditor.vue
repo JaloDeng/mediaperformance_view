@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="'编辑'" :close-on-click-modal="false" :visible.sync="outerDialogVisible" :before-close="closeEdit" width="80%" center>
+    <el-dialog :title="'编辑'" :close-on-click-modal="false" :visible.sync="outerDialogVisible" :before-close="closeEdit" width="90%" center top="10px">
       <newsPreview :dialogVisible="innerNewPreviewVisible" :url="article.url" v-on:closeNewsPreview="closeNewsPreview"></newsPreview>
       <el-form :model="article" ref="saveForm">
         <el-row type="flex">
@@ -96,7 +96,14 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          <el-col :span="12">
+          <el-col :span="24">
+            <el-form-item label="备注" label-width="120px">
+              <el-input v-model="article.articleScoreRecord.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="24">
             <el-form-item label="分数占比" label-width="120px">
               <el-button size="mini" type="primary" @click="addScoreRecordAuthorRow(article.articleScoreRecordAuthors)">添加</el-button>
               <el-table :data="article.articleScoreRecordAuthors" size="mini" border>
@@ -106,23 +113,38 @@
                     <el-input size="mini" v-model="scope.row.author"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" prop="percent" label="占比(%)">
+                <el-table-column align="center" prop="title" label="标题" width="500px;">
                   <template slot-scope="scope">
-                    <el-input style="width: 50%" size="mini" v-model="scope.row.percent" max="100" min="0"></el-input> %
+                    <el-input size="mini" v-model="scope.row.title"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="分数" :formatter="formatAuthorScore"></el-table-column>
+                <el-table-column align="center" prop="editor" label="编辑">
+                  <template slot-scope="scope">
+                    <el-input size="mini" v-model="scope.row.editor"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="wordCount" label="字数" width="100px;">
+                  <template slot-scope="scope">
+                    <el-input type="number" size="mini" v-model="scope.row.wordCount"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="sourceCount" label="素材数量" width="100px;">
+                  <template slot-scope="scope">
+                    <el-input size="mini" v-model="scope.row.sourceCount"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="percent" label="占比(%)">
+                  <template slot-scope="scope">
+                    <el-input type="number" style="width: 50%" size="mini" v-model="scope.row.percent" max="100" min="0"></el-input> %
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="分数" :formatter="formatAuthorScore" width="100px;"></el-table-column>
                 <el-table-column align="center" width="150" label="操作" fixed="right">
                   <template slot-scope="scope">
                     <el-button @click.native.prevent="delScoreRecordAuthorRow(scope.$index, article.articleScoreRecordAuthors)" size="mini" type="danger">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="备注" label-width="120px">
-              <el-input v-model="article.articleScoreRecord.remark" type="textarea" rows="5" size="mini" placeholder="请输入备注"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -196,9 +218,17 @@ export default {
   },
   methods: {
     addScoreRecordAuthorRow (tableData, event) {
+      var title = this.article.appTitle
+      var editor = this.article.editor
+      var wordCount = this.article.wordCount || 0
+      var sourceCount = this.article.sourceCount || 0
       tableData.push({
         id: '',
         author: '',
+        title: title,
+        editor: editor,
+        wordCount: wordCount,
+        sourceCount: sourceCount,
         percent: 0
       })
     },
