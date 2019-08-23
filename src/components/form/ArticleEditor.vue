@@ -77,7 +77,7 @@
           </el-col>
           <el-col :span="12" :hidden="article.newsType === 'IMAGE' || article.newsType === 'AUDIOANDVIDEO' ? false : true">
             <el-form-item label="素材数量" label-width="120px">
-              <el-input type="number" v-model="article.articleScoreRecord.sourceCount" size="mini" class="input_width"></el-input>
+              <el-input type="number" v-model="article.sourceCount" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -188,6 +188,7 @@ export default {
         author: '',
         editor: '',
         wordCount: '',
+        sourceCount: '',
         url: '',
         authorScore: '',
         createUser: '',
@@ -276,6 +277,7 @@ export default {
         author: '',
         editor: '',
         wordCount: '',
+        sourceCount: '',
         url: '',
         authorScore: '',
         createUser: '',
@@ -329,6 +331,7 @@ export default {
         this.$message('请输入正确的分数占比')
         return
       }
+      _this.article.articleScoreRecord.sourceCount = _this.article.sourceCount
       this.putRequest('/article', _this.article).then(resp => {
         this.closeEdit()
       })

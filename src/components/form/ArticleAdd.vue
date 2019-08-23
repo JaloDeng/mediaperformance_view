@@ -12,7 +12,7 @@
           </el-row>
           <el-row type="flex">
             <el-form-item label="素材数量" label-width="120px" :hidden="article.newsType === 'IMAGE' || article.newsType === 'AUDIOANDVIDEO' ? false : true">
-              <el-input type="number" v-model="article.articleScoreRecord.sourceCount" size="mini" class="input_width"></el-input>
+              <el-input type="number" v-model="article.sourceCount" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-row>
           <el-row type="flex">
@@ -79,6 +79,7 @@ export default {
     },
     save () {
       var _this = this
+      _this.article.articleScoreRecord.sourceCount = _this.article.sourceCount
       this.putRequest('/article', _this.article).then(resp => {
         this.closeDialog()
       })
