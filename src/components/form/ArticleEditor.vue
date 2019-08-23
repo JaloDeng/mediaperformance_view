@@ -60,7 +60,7 @@
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item label="字数" label-width="120px">
-              <el-input type="number" v-model="article.wordCount" :min="0" size="mini" :readonly="isDisabledEditArticle" class="input_width"></el-input>
+              <el-input type="number" v-model="article.wordCount" :min="0" size="mini" class="input_width"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
